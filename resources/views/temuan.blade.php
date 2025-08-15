@@ -69,7 +69,10 @@
 <header class="p-4 sm:p-6 bg-white shadow-md w-full flex justify-between items-center">
     <div>
         <h1 class="text-xl sm:text-2xl font-bold text-gray-800">📝 Temuan Harian</h1>
-        <p class="text-sm text-gray-500">Selamat datang, berikut statistik backlog Anda</p>
+        <p class="text-sm text-gray-500">
+    Hallo, {{ Auth::user()->name }}
+</p>
+
     </div>
     
     <!-- Tombol Logout -->
@@ -89,11 +92,11 @@
         <div class="flex justify-end gap-2">
             <button id="cancelLogout"
                 class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Batal</button>
-            <form method="POST" action="/logout">
-                @csrf
-                <button type="submit"
-                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Logout</button>
-            </form>
+<form method="POST" action="/logout">
+    @csrf
+    <button type="submit"
+        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Logout</button>
+</form>
         </div>
     </div>
 </div>
@@ -120,90 +123,92 @@
                 <!-- Form Tambah Temuan -->
                 <div id="formTemuan" class="bg-white rounded-xl shadow p-6 hidden">
                     <h3 class="text-md font-bold text-gray-700 mb-4">Tambah Temuan Baru</h3>
-                    <form class="space-y-4">
+                    <form action="{{ route('temuan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+    @csrf
+
                         <!-- Tanggal Temuan -->
                         <div>
                             <label class="block text-sm text-gray-600">Tanggal Temuan</label>
-                            <input type="date" class="w-full border rounded-md p-2 mt-1" required>
+                            <input type="date" name="tanggal_temuan" class="w-full border rounded-md p-2 mt-1" required>
                         </div>
 
                         <!-- ID Inspeksi -->
                         <div>
                             <label class="block text-sm text-gray-600">ID Inspeksi</label>
-                            <input type="text" class="w-full border rounded-md p-2 mt-1"
-                                placeholder="Contoh: INSP-2025-001" required>
+                            <input type="text" name="id_inspeksi" placeholder="Contoh: INSP-2025-001" class="w-full border rounded-md p-2 mt-1" required>
                         </div>
 
                         <!-- Code Number -->
                         <div>
                             <label class="block text-sm text-gray-600">Code Number</label>
-                            <input type="text" class="w-full border rounded-md p-2 mt-1" placeholder="Contoh: CN-001">
+                            <input type="text" name="code_number" placeholder="Contoh: CN-001" class="w-full border rounded-md p-2 mt-1">
                         </div>
 
                         <!-- HM -->
                         <div>
                             <label class="block text-sm text-gray-600">HM</label>
-                            <input type="number" class="w-full border rounded-md p-2 mt-1" placeholder="Contoh: 12345">
+                            <input type="number" name="hm" placeholder="Contoh: 12345" class="w-full border rounded-md p-2 mt-1">
                         </div>
 
                         <!-- Component -->
                         <div>
                             <label class="block text-sm text-gray-600">Component</label>
-                            <input type="text" class="w-full border rounded-md p-2 mt-1"
-                                placeholder="Contoh: Final Drive">
+                            <input type="text" name="component" placeholder="Contoh: Final Drive" class="w-full border rounded-md p-2 mt-1">
                         </div>
 
                         <!-- Plan Repair -->
                         <div>
                             <label class="block text-sm text-gray-600">Plan Repair</label>
-                            <select class="w-full border rounded-md p-2 mt-1">
-                                <option>Next PS</option>
-                                <option>No Repair</option>
-                            </select>
+                            <select name="plan_repair" class="w-full border rounded-md p-2 mt-1">
+    <option value="Next PS">Next PS</option>
+    <option value="No Repair">No Repair</option>
+</select>
+
                         </div>
 
                         <!-- Status -->
                         <div>
                             <label class="block text-sm text-gray-600">Status</label>
-                            <select class="w-full border rounded-md p-2 mt-1">
-                                <option>Open BL</option>
-                                <option>Close</option>
-                            </select>
+                            <select name="status" class="w-full border rounded-md p-2 mt-1">
+    <option value="Open BL">Open BL</option>
+    <option value="Close">Close</option>
+</select>
                         </div>
 
                         <!-- Condition -->
                         <div>
                             <label class="block text-sm text-gray-600">Condition</label>
-                            <select class="w-full border rounded-md p-2 mt-1">
-                                <option>Caution</option>
-                                <option>Urgent</option>
-                            </select>
+                            <select name="condition" class="w-full border rounded-md p-2 mt-1">
+    <option value="Caution">Caution</option>
+    <option value="Urgent">Urgent</option>
+</select>
                         </div>
 
                         <!-- GL PIC -->
                         <div>
                             <label class="block text-sm text-gray-600">GL PIC</label>
-                            <input type="text" class="w-full border rounded-md p-2 mt-1"
-                                placeholder="Contoh: Budi Santoso">
+                            <input type="text" name="gl_pic" placeholder="Contoh: Budi Santoso" class="w-full border rounded-md p-2 mt-1">
+
                         </div>
 
                         <!-- PIC Daily -->
                         <div>
                             <label class="block text-sm text-gray-600">PIC Daily</label>
-                            <input type="text" class="w-full border rounded-md p-2 mt-1"
-                                placeholder="Contoh: Siti Aminah">
+                            <input type="text" name="pic_daily" placeholder="Contoh: Siti Aminah" class="w-full border rounded-md p-2 mt-1">
+
                         </div>
 
                         <!-- Evidence -->
                         <div>
                             <label class="block text-sm text-gray-600">Evidence (Upload Foto)</label>
-                            <input type="file" accept="image/*" class="w-full border rounded-md p-2 mt-1">
+                            <input type="file" name="evidence" accept="image/*" class="w-full border rounded-md p-2 mt-1">
                         </div>
 
                         <!-- Deskripsi -->
                         <div>
                             <label class="block text-sm text-gray-600">Deskripsi Temuan</label>
-                            <textarea class="w-full border rounded-md p-2 mt-1" rows="3" required></textarea>
+                            <textarea name="deskripsi" class="w-full border rounded-md p-2 mt-1" rows="3"></textarea>
+
                         </div>
 
                         <!-- Tombol -->
@@ -247,57 +252,103 @@
                                 </tr>
                             </thead>
                             <tbody class="text-gray-800">
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-2 border whitespace-nowrap">DT1234</td>
-                                    <td class="px-4 py-2 border">Overheating</td>
-                                    <td class="px-4 py-2 border whitespace-nowrap">2025-07-30</td>
-                                    <td class="px-4 py-2 border">
-                                        <span
-                                            class="inline-block px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-200 rounded-full">
-                                            Caution
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-2 border whitespace-nowrap">Open BL</td>
-                                    <td class="px-4 py-2 border text-center whitespace-nowrap">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <span
-                                                class="inline-flex items-center justify-center px-2 py-1 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-md hover:bg-yellow-200 cursor-pointer">
-                                                ✏️ Edit
-                                            </span>
-                                            <span
-                                                class="inline-flex items-center justify-center px-2 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-md hover:bg-red-200 cursor-pointer">
-                                                🗑️ Hapus
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
+@foreach($temuan as $item)
+    <tr class="hover:bg-gray-50">
+        <td class="px-4 py-2 border whitespace-nowrap">{{ $item->code_number }}</td>
+        <td class="px-4 py-2 border">{{ $item->deskripsi }}</td>
+        <td class="px-4 py-2 border whitespace-nowrap">{{ $item->tanggal_temuan }}</td>
+        <td class="px-4 py-2 border">
+            @if($item->condition === 'Urgent')
+                <span class="inline-block px-2 py-1 text-xs font-semibold text-red-800 bg-red-200 rounded-full">
+                    {{ $item->condition }}
+                </span>
+            @else
+                <span class="inline-block px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-200 rounded-full">
+                    {{ $item->condition }}
+                </span>
+            @endif
+        </td>
+        <td class="px-4 py-2 border whitespace-nowrap">{{ $item->status }}</td>
+        <td class="px-4 py-2 border text-center whitespace-nowrap">
+            <div class="flex items-center justify-center gap-2">
+                <button
+    type="button"
+    class="inline-flex items-center justify-center px-2 py-1 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-md hover:bg-yellow-200"
+    onclick="editTemuan({{ $item->id }}, '{{ $item->tanggal_temuan }}', '{{ $item->code_number }}', '{{ $item->component }}', '{{ $item->status }}', '{{ $item->condition }}', `{{ $item->deskripsi }}`)">
+    ✏️ Edit
+</button>
 
-                                <!-- Urgent -->
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-2 border whitespace-nowrap">DT2345</td>
-                                    <td class="px-4 py-2 border">Bearing Oblak</td>
-                                    <td class="px-4 py-2 border whitespace-nowrap">2025-07-30</td>
-                                    <td class="px-4 py-2 border">
-                                        <span
-                                            class="inline-block px-2 py-1 text-xs font-semibold text-red-800 bg-red-200 rounded-full">
-                                            Urgent
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-2 border whitespace-nowrap">Open BL</td>
-                                    <td class="px-4 py-2 border text-center whitespace-nowrap">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <span
-                                                class="inline-flex items-center justify-center px-2 py-1 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-md hover:bg-yellow-200 cursor-pointer">
-                                                ✏️ Edit
-                                            </span>
-                                            <span
-                                                class="inline-flex items-center justify-center px-2 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-md hover:bg-red-200 cursor-pointer">
-                                                🗑️ Hapus
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+
+                {{-- Delete form --}}
+                <form action="{{ route('temuan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus temuan ini?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="inline-flex items-center justify-center px-2 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-md hover:bg-red-200">
+                        🗑️ Hapus
+                    </button>
+                </form>
+            </div>
+        </td>
+    </tr>
+@endforeach
+<!-- Edit Temuan Modal -->
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+        <h3 class="text-lg font-semibold mb-4">Edit Temuan</h3>
+
+        <form id="editForm" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-600">Tanggal Temuan</label>
+                    <input type="date" name="tanggal_temuan" id="edit_tanggal_temuan" class="w-full border rounded-md p-2 mt-1" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-600">Code Number</label>
+                    <input type="text" name="code_number" id="edit_code_number" class="w-full border rounded-md p-2 mt-1" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-600">Component</label>
+                    <input type="text" name="component" id="edit_component" class="w-full border rounded-md p-2 mt-1" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-600">Status</label>
+                    <select name="status" id="edit_status" class="w-full border rounded-md p-2 mt-1" required>
+                        <option value="Open BL">Open BL</option>
+                        <option value="Close">Close</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-600">Condition</label>
+                    <select name="condition" id="edit_condition" class="w-full border rounded-md p-2 mt-1">
+                        <option value="Caution">Caution</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-600">Deskripsi</label>
+                    <textarea name="deskripsi" id="edit_deskripsi" class="w-full border rounded-md p-2 mt-1" rows="3"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Simpan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</tbody>
+
                         </table>
 
                     </div>
@@ -403,6 +454,29 @@
             });
         }
     });
+</script>
+<script>
+function editTemuan(id, tanggal, code, component, status, condition, deskripsi) {
+    // Fill form values
+    document.getElementById('edit_tanggal_temuan').value = tanggal;
+    document.getElementById('edit_code_number').value = code;
+    document.getElementById('edit_component').value = component;
+    document.getElementById('edit_status').value = status;
+    document.getElementById('edit_condition').value = condition;
+    document.getElementById('edit_deskripsi').value = deskripsi;
+
+    // Set form action URL
+    document.getElementById('editForm').action = `/temuan/${id}`;
+
+    // Show modal
+    document.getElementById('editModal').classList.remove('hidden');
+    document.getElementById('editModal').classList.add('flex');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.add('hidden');
+    document.getElementById('editModal').classList.remove('flex');
+}
 </script>
 
 

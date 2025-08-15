@@ -69,9 +69,13 @@
 <header class="p-4 sm:p-6 bg-white shadow-md w-full flex justify-between items-center">
     <div>
         <h1 class="text-xl sm:text-2xl font-bold text-gray-800">📊 Dashboard</h1>
-        <p class="text-sm text-gray-500">Selamat datang, berikut statistik backlog Anda</p>
+        <p class="text-sm text-gray-500">
+    Hallo, {{ Auth::user()->name }}
+</p>
     </div>
-    
+    <p class="text-sm text-gray-500">
+    Hallo, {{ Auth::user()->name }}
+</p>
     <!-- Tombol Logout -->
 <div>
     <button id="logoutBtn"
@@ -105,24 +109,25 @@
         <main class="p-4 sm:p-6 flex-1 w-full space-y-6">
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div class="bg-white rounded-xl shadow p-4">
-                    <p class="text-sm text-gray-500">Total Temuan</p>
-                    <h2 class="text-xl font-bold text-blue-600">128</h2>
-                </div>
-                <div class="bg-white rounded-xl shadow p-4">
-                    <p class="text-sm text-gray-500">Total Backlog</p>
-                    <h2 class="text-xl font-bold text-yellow-500">42</h2>
-                </div>
-                <div class="bg-white rounded-xl shadow p-4">
-                    <p class="text-sm text-gray-500">Backlog Closed</p>
-                    <h2 class="text-xl font-bold text-red-600">9</h2>
-                </div>
-                <div class="bg-white rounded-xl shadow p-4">
-                    <p class="text-sm text-gray-500">Backlog Completed</p>
-                    <h2 class="text-xl font-bold text-green-600">6</h2>
-                </div>
-            </div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="bg-white rounded-xl shadow p-4">
+        <p class="text-sm text-gray-500">Total Temuan</p>
+        <h2 class="text-xl font-bold text-blue-600">{{ $totalTemuan }}</h2>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4">
+        <p class="text-sm text-gray-500">Total Backlog</p>
+        <h2 class="text-xl font-bold text-yellow-500">{{ $totalBacklog }}</h2>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4">
+        <p class="text-sm text-gray-500">Backlog Completed</p>
+        <h2 class="text-xl font-bold text-green-600">{{ $backlogCompleted }}</h2>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4">
+        <p class="text-sm text-gray-500">Repair Waiting</p>
+        <h2 class="text-xl font-bold text-red-600">{{ $planRepair }}</h2>
+    </div>
+</div>
+
 
             <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -176,57 +181,52 @@
 
 </script>
 <script>
-    // Chart 1: backlogChart
-    const backlogCtx = document.getElementById('backlogChart') ?.getContext('2d');
-    if (backlogCtx) {
-        new Chart(backlogCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Open', 'Closed', 'Canceled'],
-                datasets: [{
-                    label: 'Jumlah Backlog',
-                    data: [77, 42, 9],
-                    backgroundColor: ['#3B82F6', '#10B981', '#FBBF24'],
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+// Chart 1: backlogChart
+const backlogCtx = document.getElementById('backlogChart')?.getContext('2d');
+if (backlogCtx) {
+    new Chart(backlogCtx, {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($statusData->keys()) !!},
+            datasets: [{
+                label: 'Jumlah Backlog',
+                data: {!! json_encode($statusData->values()) !!},
+                backgroundColor: ['#3B82F6', '#10B981', '#FBBF24', '#EF4444'],
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
             }
-        });
-    }
+        }
+    });
+}
 
-    // Chart 2: kategoriChart (dummy data)
-    const kategoriCtx = document.getElementById('kategoriChart') ?.getContext('2d');
-    if (kategoriCtx) {
-        new Chart(kategoriCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Electrical', 'Mechanical', 'Hydraulic', 'Others'],
-                datasets: [{
-                    label: 'Kategori Backlog',
-                    data: [35, 25, 20, 10],
-                    backgroundColor: ['#6366F1', '#F59E0B', '#EF4444', '#10B981'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-    }
+// Chart 2: kategoriChart
+const kategoriCtx = document.getElementById('kategoriChart')?.getContext('2d');
+if (kategoriCtx) {
+    new Chart(kategoriCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {!! json_encode($kategoriData->keys()) !!},
+            datasets: [{
+                label: 'Kategori Backlog',
+                data: {!! json_encode($kategoriData->values()) !!},
+                backgroundColor: ['#6366F1', '#F59E0B', '#EF4444', '#10B981'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+}
+
 
     // Sidebar toggle
     function toggleSidebar() {
