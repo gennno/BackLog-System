@@ -44,14 +44,18 @@
                     class="flex items-center gap-2 px-4 py-3 hover:bg-blue-100 text-gray-700 font-medium transition rounded-md">
                     📚 Learning Center
                 </a>
-                <a href="/pengguna"
-                    class="flex items-center gap-2 px-4 py-3 bg-blue-100 text-gray-700 font-medium transition rounded-md">
-                    👤 Daftar Pengguna
-                </a>
+                
                 <a href="/pengaturan"
                     class="flex items-center gap-2 px-4 py-3 hover:bg-blue-100 text-gray-700 font-medium transition rounded-md">
                     ⚙️ Pengaturan
                 </a>
+                @if(auth()->user()->role === 'admin')
+    <a href="/pengguna"
+       class="flex items-center gap-2 px-4 py-3 bg-blue-100 text-gray-700 font-medium transition rounded-md">
+       👤 Daftar Pengguna
+    </a>
+@endif
+
             </nav>
         </div>
     </aside>

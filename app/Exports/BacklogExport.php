@@ -13,7 +13,7 @@ class BacklogExport implements FromCollection, WithHeadings
         return Backlog::select(
             'code_number',
             'deskripsi',
-            'created_at',
+            'tanggal_temuan',
             'condition',
             'status'
         )->get();

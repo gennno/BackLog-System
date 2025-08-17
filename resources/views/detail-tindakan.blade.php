@@ -48,6 +48,12 @@
                         class="flex items-center gap-2 px-4 py-3 hover:bg-blue-100 text-gray-700 font-medium transition rounded-md">
                         ⚙️ Pengaturan
                     </a>
+                    @if(auth()->user()->role === 'admin')
+                        <a href="/pengguna"
+                            class="flex items-center gap-2 px-4 py-3 hover:bg-blue-100 text-gray-700 font-medium transition rounded-md">
+                            👤 Daftar Pengguna
+                        </a>
+                    @endif
                 </nav>
             </div>
         </aside>
@@ -125,7 +131,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="border-b pb-2">
                                 <label class="text-gray-500 text-sm">Tanggal Temuan</label>
-                                <input type="text" value="{{ $backlog->created_at->format('Y-m-d') }}"
+                                <input type="text" value="{{ $backlog->tanggal_temuan->format('Y-m-d') }}"
                                     class="w-full font-semibold text-gray-800 border rounded px-3 py-1" readonly />
                             </div>
 

@@ -9,6 +9,10 @@ class Backlog extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+    'tanggal_temuan' => 'datetime',
+];
+
     protected $table = 'backlog'; // karena bukan jamak "backlogs"
 
     protected $fillable = [

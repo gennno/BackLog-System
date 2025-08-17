@@ -48,6 +48,12 @@
                         class="flex items-center gap-2 px-4 py-3 hover:bg-blue-100 text-gray-700 font-medium transition rounded-md">
                         ⚙️ Pengaturan
                     </a>
+                    @if(auth()->user()->role === 'admin')
+                        <a href="/pengguna"
+                            class="flex items-center gap-2 px-4 py-3 hover:bg-blue-100 text-gray-700 font-medium transition rounded-md">
+                            👤 Daftar Pengguna
+                        </a>
+                    @endif
                 </nav>
             </div>
         </aside>
@@ -275,7 +281,7 @@
                                             <td class="px-4 py-2 border whitespace-nowrap">{{ $item->id_inspeksi }}</td>
                                             <td class="px-4 py-2 border whitespace-nowrap">{{ $item->code_number }}</td>
                                             <td class="px-4 py-2 border">{{ $item->deskripsi }}</td>
-                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $item->created_at }}</td>
+                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $item->tanggal_temuan }}</td>
                                             <td class="px-4 py-2 border">
                                                 @php
                                                     $color = match ($item->condition) {
