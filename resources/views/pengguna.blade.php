@@ -256,11 +256,10 @@
                                                         ✏️ Edit
                                                     </span>
                                                     <span
-    class="inline-flex items-center justify-center px-2 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-md hover:bg-red-200 cursor-pointer deleteBtn"
-    data-id="{{ $user->id }}"
-    data-name="{{ $user->name }}">
-    🗑️ Hapus
-</span>
+                                                        class="inline-flex items-center justify-center px-2 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-md hover:bg-red-200 cursor-pointer deleteBtn"
+                                                        data-id="{{ $user->id }}" data-name="{{ $user->name }}">
+                                                        🗑️ Hapus
+                                                    </span>
 
                                                 </div>
                                             </td>
@@ -335,20 +334,24 @@
                                     </form>
                                 </div>
                             </div>
-<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-        <h3 class="text-lg font-bold mb-4">Konfirmasi Hapus</h3>
-        <p class="text-sm text-gray-600 mb-4">Apakah Anda yakin ingin menghapus pengguna <span id="deleteUserName" class="font-semibold"></span>?</p>
-        <form id="deleteForm" method="POST">
-            @csrf
-            @method('DELETE')
-            <div class="flex justify-end gap-2">
-                <button type="button" id="cancelDelete" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Hapus</button>
-            </div>
-        </form>
-    </div>
-</div>
+                            <div id="deleteModal"
+                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+                                    <h3 class="text-lg font-bold mb-4">Konfirmasi Hapus</h3>
+                                    <p class="text-sm text-gray-600 mb-4">Apakah Anda yakin ingin menghapus pengguna <span
+                                            id="deleteUserName" class="font-semibold"></span>?</p>
+                                    <form id="deleteForm" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <div class="flex justify-end gap-2">
+                                            <button type="button" id="cancelDelete"
+                                                class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
+                                            <button type="submit"
+                                                class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Hapus</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -488,29 +491,29 @@
     </script>
     <script>
         document.querySelectorAll('.deleteBtn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        const name = btn.dataset.name;
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const name = btn.dataset.name;
 
-        document.getElementById('deleteUserName').textContent = name;
-        const form = document.getElementById('deleteForm');
-        form.action = `/pengguna/${id}`; // Set dynamic action URL
+                document.getElementById('deleteUserName').textContent = name;
+                const form = document.getElementById('deleteForm');
+                form.action = `/pengguna/${id}`; // Set dynamic action URL
 
-        document.getElementById('deleteModal').classList.remove('hidden');
-    });
-});
+                document.getElementById('deleteModal').classList.remove('hidden');
+            });
+        });
 
-// Close modal
-document.getElementById('cancelDelete').addEventListener('click', () => {
-    document.getElementById('deleteModal').classList.add('hidden');
-});
+        // Close modal
+        document.getElementById('cancelDelete').addEventListener('click', () => {
+            document.getElementById('deleteModal').classList.add('hidden');
+        });
 
-// Klik luar modal untuk tutup
-document.getElementById('deleteModal').addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) {
-        document.getElementById('deleteModal').classList.add('hidden');
-    }
-});
+        // Klik luar modal untuk tutup
+        document.getElementById('deleteModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('deleteModal').classList.add('hidden');
+            }
+        });
 
-        </script>
+    </script>
 @endsection
