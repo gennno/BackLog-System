@@ -10,6 +10,7 @@ use App\Http\Controllers\PerbaikanController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ToolController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', [LoginController::class, 'showLoginForm']);
 Route::post('/login', [LoginController::class, 'login'])->name('login');
@@ -54,20 +55,17 @@ Route::middleware([EnsureLoggedIn::class])->group(function () {
     Route::put('/tools/{tool}', [ToolController::class, 'update'])->name('tools.update');
     Route::delete('/tools/{tool}', [ToolController::class, 'destroy'])->name('tools.destroy');
 
-Route::get('/learning', action: function () {
-    return view('learning');
-});
+    Route::get('/learning', action: function () {
+        return view('learning');
+    });
 
     Route::get('/pengaturan', [ProfileController::class, 'edit'])->name('pengaturan.edit');
     Route::post('/pengaturan', [ProfileController::class, 'update'])->name('pengaturan.update');
 
-
-
-
-Route::get('/pengguna', action: function () {
-    return view('pengguna');
-});
-
+    Route::get('/pengguna', [UserController::class, 'index'])->name('pengguna.index');
+    Route::post('/pengguna', [UserController::class, 'store'])->name('pengguna.store');
+    Route::delete('/pengguna/{user}', [UserController::class, 'destroy'])->name('pengguna.destroy');
+    Route::put('/pengguna/{user}', [UserController::class, 'update'])->name('pengguna.update');
 
 
 });
