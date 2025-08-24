@@ -148,7 +148,7 @@
 
                             <!-- Code Number -->
                             <div>
-                                <label class="block text-sm text-gray-600">Code Number</label>
+                                <label class="block text-sm text-gray-600">Nomor Lambung</label>
                                 <input type="text" name="code_number" placeholder="Contoh: CN-001"
                                     class="w-full border rounded-md p-2 mt-1">
                             </div>
@@ -257,7 +257,8 @@
                             <table class="table-auto w-full text-sm text-left border border-gray-300">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-700">
-                                        <th class="px-4 py-2 border whitespace-nowrap">Code Number</th>
+                                        <th class="px-4 py-2 border whitespace-nowrap">Nomor Lambung</th>
+                                        <th class="px-4 py-2 border whitespace-nowrap">Component</th>
                                         <th class="px-4 py-2 border whitespace-nowrap">Deskripsi</th>
                                         <th class="px-4 py-2 border whitespace-nowrap">Tanggal</th>
                                         <th class="px-4 py-2 border whitespace-nowrap">Condition</th>
@@ -269,6 +270,7 @@
                                     @foreach($temuan as $item)
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-4 py-2 border whitespace-nowrap">{{ $item->code_number }}</td>
+                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $item->component }}</td>
                                             <td class="px-4 py-2 border">{{ $item->deskripsi }}</td>
                                             <td class="px-4 py-2 border whitespace-nowrap">{{ $item->tanggal_temuan }}</td>
                                             <td class="px-4 py-2 border">
@@ -326,7 +328,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <label class="block text-sm text-gray-600">Code Number</label>
+                                                        <label class="block text-sm text-gray-600">Nomor Lambung</label>
                                                         <input type="text" name="code_number" id="edit_code_number"
                                                             class="w-full border rounded-md p-2 mt-1" required>
                                                     </div>

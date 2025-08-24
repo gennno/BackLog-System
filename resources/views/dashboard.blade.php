@@ -79,9 +79,6 @@
     Hallo, {{ Auth::user()->name }}
 </p>
     </div>
-    <p class="text-sm text-gray-500">
-    Hallo, {{ Auth::user()->name }}
-</p>
     <!-- Tombol Logout -->
 <div>
     <button id="logoutBtn"

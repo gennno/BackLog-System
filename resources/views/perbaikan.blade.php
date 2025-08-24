@@ -257,7 +257,7 @@
                             <table class="table-auto w-full text-sm text-left border border-gray-300">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-700">
-                                        <th class="px-4 py-2 border whitespace-nowrap">Kode Unit</th>
+                                        <th class="px-4 py-2 border whitespace-nowrap">Nomor Lambung</th>
                                         <th class="px-4 py-2 border whitespace-nowrap">Component</th>
                                         <th class="px-4 py-2 border whitespace-nowrap">Deskripsi</th>
                                         <th class="px-4 py-2 border whitespace-nowrap">Tanggal</th>

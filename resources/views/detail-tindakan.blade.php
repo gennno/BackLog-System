@@ -143,7 +143,7 @@
 
                             <!-- Code Number & HM -->
                             <div class="border-b pb-2">
-                                <label class="text-gray-500 text-sm">Code Number</label>
+                                <label class="text-gray-500 text-sm">Nomor Lambung</label>
                                 <input type="text" name="code_number" value="{{ $backlog->code_number }}"
                                     class="w-full font-semibold text-gray-800 border rounded px-3 py-1" />
                             </div>
