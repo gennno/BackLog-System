@@ -57,25 +57,25 @@ public function update(Request $request, $id)
         'id_action'   => 'nullable|string|max:255',
     ]);
 
-// Handle new evidence upload
-if ($request->hasFile('evidence')) {
-    // Delete old evidence if exists
-    if ($backlog->evidence && file_exists(base_path('public_html/' . $backlog->evidence))) {
-        unlink(base_path('public_html/' . $backlog->evidence));
+
+        // Handle new evidence upload
+    if ($request->hasFile('evidence')) {
+        // Delete old evidence if exists
+        if ($backlog->evidence && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $backlog->evidence)) {
+            unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $backlog->evidence);
+        }
+
+        $file = $request->file('evidence');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/evidence';
+        if (!file_exists($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $file->move($destination, $filename);
+        $validated['evidence'] = 'uploads/evidence/' . $filename;
     }
-
-    $file = $request->file('evidence');
-    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-    $destination = base_path('public_html/uploads/evidence');
-    if (!file_exists($destination)) {
-        mkdir($destination, 0755, true);
-    }
-
-    $file->move($destination, $filename);
-    $validated['evidence'] = 'uploads/evidence/' . $filename;
-}
-
 
     $backlog->update($validated);
 

@@ -36,24 +36,25 @@ public function update(Request $request)
         $user->password = Hash::make($request->password);
     }
 
-    // Update profile photo if uploaded
-    if ($request->hasFile('photo')) {
-        // Delete old photo if exists
-        if ($user->photo && file_exists(base_path('public_html/' . $user->photo))) {
-            unlink(base_path('public_html/' . $user->photo));
-        }
-
-        $file = $request->file('photo');
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-        $destination = base_path('public_html/profile_photos');
-        if (!file_exists($destination)) {
-            mkdir($destination, 0755, true);
-        }
-
-        $file->move($destination, $filename);
-        $user->photo = 'profile_photos/' . $filename;
+// Update profile photo if uploaded
+if ($request->hasFile('photo')) {
+    // Delete old photo if exists
+    if ($user->photo && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo)) {
+        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo);
     }
+
+    $file = $request->file('photo');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/profile_photos';
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $file->move($destination, $filename);
+    $user->photo = 'profile_photos/' . $filename; // store relative path in DB
+}
+
 
     // Save all changes
     $user->save();

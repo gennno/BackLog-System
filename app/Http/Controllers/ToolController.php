@@ -28,12 +28,19 @@ public function store(Request $request)
         'foto'      => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:2048',
     ]);
 
-    if ($request->hasFile('foto')) {
-        $file = $request->file('foto');
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(base_path('public_html/tool_photos'), $filename);
-        $data['foto'] = 'tool_photos/' . $filename; // relative path
+if ($request->hasFile('foto')) {
+    $file = $request->file('foto');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/tool_photos';
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
     }
+
+    $file->move($destination, $filename);
+    $data['foto'] = 'tool_photos/' . $filename; // relative path
+}
+
 
     Tool::create($data);
 
@@ -55,18 +62,24 @@ public function update(Request $request, Tool $tool)
         'foto'      => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:2048',
     ]);
 
-    if ($request->hasFile('foto')) {
-        // delete old photo if exists
-        if ($tool->foto && file_exists(public_path($tool->foto))) {
-            unlink(public_path($tool->foto));
-        }
-
-        $file = $request->file('foto');
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(base_path('public_html/tool_photos'), $filename);
-
-        $data['foto'] = 'tool_photos/' . $filename; // relative path
+if ($request->hasFile('foto')) {
+    // Delete old photo if exists
+    if ($tool->foto && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $tool->foto)) {
+        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $tool->foto);
     }
+
+    $file = $request->file('foto');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/tool_photos';
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $file->move($destination, $filename);
+    $data['foto'] = 'tool_photos/' . $filename; // relative path
+}
+
 
     $tool->update($data);
 
@@ -77,9 +90,10 @@ public function update(Request $request, Tool $tool)
     // Delete tool
     public function destroy(Tool $tool)
     {
-        if ($tool->foto && file_exists(public_path('storage/' . $tool->foto))) {
-            unlink(public_path('storage/' . $tool->foto));
-        }
+if ($tool->foto && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $tool->foto)) {
+    unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $tool->foto);
+}
+
 
         $tool->delete();
 

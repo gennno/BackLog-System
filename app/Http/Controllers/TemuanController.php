@@ -31,13 +31,13 @@ public function store(Request $request)
         $file = $request->file('evidence');
         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-        $destination = base_path('public_html/uploads/evidence');
+        $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/evidence';
         if (!file_exists($destination)) {
             mkdir($destination, 0755, true);
         }
 
         $file->move($destination, $filename);
-        $evidencePath = 'uploads/evidence/' . $filename; // store relative path
+        $evidencePath = 'uploads/evidence/' . $filename; // relative path
     }
 
     Backlog::create([

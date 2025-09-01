@@ -37,12 +37,12 @@ public function store(Request $request)
         'deskripsi' => 'nullable|string',
     ]);
 
-// Store method
-if ($request->hasFile('evidence_temuan')) {
+
+    if ($request->hasFile('evidence_temuan')) {
     $file = $request->file('evidence_temuan');
     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-    $destination = base_path('public_html/uploads/evidences');
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/evidences';
     if (!file_exists($destination)) {
         mkdir($destination, 0755, true);
     }
@@ -55,7 +55,7 @@ if ($request->hasFile('evidence_perbaikan')) {
     $file = $request->file('evidence_perbaikan');
     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-    $destination = base_path('public_html/uploads/evidence_perbaikan');
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/evidence_perbaikan';
     if (!file_exists($destination)) {
         mkdir($destination, 0755, true);
     }
@@ -63,6 +63,7 @@ if ($request->hasFile('evidence_perbaikan')) {
     $file->move($destination, $filename);
     $data['evidence_perbaikan'] = 'uploads/evidence_perbaikan/' . $filename;
 }
+
 
     Repair::create($data);
 
@@ -91,18 +92,17 @@ public function update(Request $request, $id)
 
     $repair = Repair::findOrFail($id);
 
-// Update method
 if ($request->hasFile('evidence_perbaikan')) {
-    // delete old file
-    if ($repair->evidence_perbaikan && file_exists(base_path('public_html/' . $repair->evidence_perbaikan))) {
-        unlink(base_path('public_html/' . $repair->evidence_perbaikan));
+    // delete old file if exists
+    if ($repair->evidence_perbaikan && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $repair->evidence_perbaikan)) {
+        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $repair->evidence_perbaikan);
     }
 
     // store new file
     $file = $request->file('evidence_perbaikan');
     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-    $destination = base_path('public_html/uploads/evidence_perbaikan');
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/evidence_perbaikan';
     if (!file_exists($destination)) {
         mkdir($destination, 0755, true);
     }
@@ -110,6 +110,7 @@ if ($request->hasFile('evidence_perbaikan')) {
     $file->move($destination, $filename);
     $validated['evidence_perbaikan'] = 'uploads/evidence_perbaikan/' . $filename;
 }
+
 
     $repair->update($validated);
 

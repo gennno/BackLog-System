@@ -34,14 +34,15 @@ if ($request->hasFile('photo')) {
     $file = $request->file('photo');
     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-    $destination = base_path('public_html/profile_photos');
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/profile_photos';
     if (!file_exists($destination)) {
         mkdir($destination, 0755, true);
     }
 
     $file->move($destination, $filename);
-    $data['photo'] = 'profile_photos/' . $filename;
+    $data['photo'] = 'profile_photos/' . $filename; // relative path for DB
 }
+
 
         // Hash password
         $data['password'] = Hash::make($data['password']);
@@ -56,8 +57,8 @@ if ($request->hasFile('photo')) {
     public function destroy(User $user)
 {
 // Destroy method - delete photo
-if ($user->photo && file_exists(base_path('public_html/' . $user->photo))) {
-    unlink(base_path('public_html/' . $user->photo));
+if ($user->photo && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo)) {
+    unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo);
 }
 
     $user->delete();
@@ -86,21 +87,23 @@ if ($user->photo && file_exists(base_path('public_html/' . $user->photo))) {
 // Update method - photo upload
 if ($request->hasFile('photo')) {
     // Delete old photo if exists
-    if ($user->photo && file_exists(base_path('public_html/' . $user->photo))) {
-        unlink(base_path('public_html/' . $user->photo));
+    if ($user->photo && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo)) {
+        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo);
     }
 
     $file = $request->file('photo');
     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-    $destination = base_path('public_html/profile_photos');
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/profile_photos';
     if (!file_exists($destination)) {
         mkdir($destination, 0755, true);
     }
 
     $file->move($destination, $filename);
-    $data['photo'] = 'profile_photos/' . $filename;
+    $data['photo'] = 'profile_photos/' . $filename; // store relative path in DB
 }
+
+
     $user->update($data);
 
     return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil diperbarui!');

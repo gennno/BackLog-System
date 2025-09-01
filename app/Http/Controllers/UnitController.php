@@ -31,18 +31,17 @@ class UnitController extends Controller
             'foto' => 'nullable|image|max:2048',
         ]);
 
-// Store method
 if ($request->hasFile('foto')) {
     $file = $request->file('foto');
     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-    $destination = base_path('public_html/unit_photos');
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/unit_photos';
     if (!file_exists($destination)) {
         mkdir($destination, 0755, true);
     }
 
     $file->move($destination, $filename);
-    $data['foto'] = 'unit_photos/' . $filename;
+    $data['foto'] = 'unit_photos/' . $filename; // store relative path in DB
 }
 
         Unit::create($data);
@@ -64,24 +63,24 @@ public function update(Request $request, Unit $unit)
         'foto' => 'nullable|image|max:2048',
     ]);
 
-// Update method
 if ($request->hasFile('foto')) {
     // Delete old file if exists
-    if ($unit->foto && file_exists(base_path('public_html/' . $unit->foto))) {
-        unlink(base_path('public_html/' . $unit->foto));
+    if ($unit->foto && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $unit->foto)) {
+        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $unit->foto);
     }
 
     $file = $request->file('foto');
     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-    $destination = base_path('public_html/unit_photos');
+    $destination = $_SERVER['DOCUMENT_ROOT'] . '/unit_photos';
     if (!file_exists($destination)) {
         mkdir($destination, 0755, true);
     }
 
     $file->move($destination, $filename);
-    $data['foto'] = 'unit_photos/' . $filename;
+    $data['foto'] = 'unit_photos/' . $filename; // store relative path
 }
+
 
     $unit->update($data);
 
@@ -94,10 +93,11 @@ if ($request->hasFile('foto')) {
 
     public function destroy(Unit $unit)
 {
-    // Delete the photo file if it exists
-    if($unit->foto && Storage::disk('public')->exists($unit->foto)){
-        Storage::disk('public')->delete($unit->foto);
-    }
+// Delete the photo file if it exists
+if ($unit->foto && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $unit->foto)) {
+    unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $unit->foto);
+}
+
 
     // Delete the unit from the database
     $unit->delete();
