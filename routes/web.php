@@ -67,6 +67,9 @@ Route::middleware([EnsureLoggedIn::class])->group(function () {
     Route::delete('/pengguna/{user}', [UserController::class, 'destroy'])->name('pengguna.destroy');
     Route::put('/pengguna/{user}', [UserController::class, 'update'])->name('pengguna.update');
 
+    Route::get('/perbaikan/export', [PerbaikanController::class, 'export'])->name('perbaikan.export');
+    Route::get('/tool/export', [ToolController::class, 'export'])->name('tool.export');
+    Route::get('/unit/export', [UnitController::class, 'export'])->name('unit.export');
 
 });
 

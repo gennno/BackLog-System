@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RepairExport;
 use App\Models\Repair;
 use App\Models\Backlog;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class PerbaikanController extends Controller
 {
@@ -88,7 +91,10 @@ public function update(Request $request, $id)
     return redirect()->back()->with('success', 'Data perbaikan berhasil diperbarui.');
 }
 
-
+    public function export()
+    {
+        return Excel::download(new RepairExport, 'repair.xlsx');
+    }
 
 
     public function destroy($id)

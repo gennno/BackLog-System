@@ -56,7 +56,7 @@
                     @endif
                 </nav>
             </div>
-        </aside>
+        </aside>r
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col w-screen overflow-auto">
@@ -122,6 +122,13 @@
                             <span id="addText">+ Tambah Perbaikan</span>
                             <span id="backText" class="hidden">← Kembali</span>
                         </button>
+
+                        
+                        <!-- Tombol Export -->
+                        <a href="{{ route('perbaikan.export') }}"
+                            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
+                            📥 Export Excel
+                        </a>
 
                     </div>
 

@@ -119,11 +119,19 @@
                         <!-- Tombol Kiri -->
                         <button id="toggleFormBtn"
                             class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                            <span id="addText">+ Tambah Tools</span>
+                            <span id="addText">+ Tambah Tool</span>
                             <span id="backText" class="hidden">← Kembali</span>
                         </button>
 
+                        <!-- Tombol Export -->
+                        <a href="{{ route('tool.export') }}"
+                            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
+                            📥 Export Excel
+                        </a>
+
+
                     </div>
+
 
                     <!-- Form Tambah Tools -->
                     <div id="formTemuan" class="bg-white rounded-xl shadow p-6 hidden">
@@ -139,9 +147,9 @@
 
                             <!-- Code Tools -->
                             <div class="mb-4">
-                                <label class="block text-sm text-gray-600">Code Tools</label>
-                                <input type="text" name="kode_tool" class="w-full border rounded-md p-2 mt-1"
-                                    placeholder="Contoh: DT1234" required>
+                                <label class="block text-sm text-gray-600">Lokasi</label>
+                                <input type="text" name="lokasi" class="w-full border rounded-md p-2 mt-1"
+                                    placeholder="Contoh: Pitstop A001" required>
                             </div>
 
                             <!-- Nama Tools -->
@@ -204,7 +212,7 @@
                                     <tr class="bg-gray-100 text-gray-700">
                                         <th class="px-4 py-2 border whitespace-nowrap">Foto</th>
                                         <th class="px-4 py-2 border whitespace-nowrap">Nama Tools</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Code Tools</th>
+                                        <th class="px-4 py-2 border whitespace-nowrap">Lokasi</th>
                                         <th class="px-4 py-2 border whitespace-nowrap">Description</th>
                                         <th class="px-4 py-2 border whitespace-nowrap">Status</th>
                                         <th class="px-4 py-2 border text-center whitespace-nowrap">Aksi</th>
@@ -214,11 +222,11 @@
                                     @foreach($tools as $tool)
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-4 py-2 border whitespace-nowrap">
-                                                <img src="{{ $tool->foto ? asset('storage/' . $tool->foto) : '/img/default.jpg' }}"
-                                                    alt="Tool Photo" class="w-14 h-14 object-cover rounded">
+                                                <img src="{{ asset($tool->foto ?? 'img/default.jpg') }}" alt="Tool Photo"
+                                                    class="w-14 h-14 object-cover rounded">
                                             </td>
                                             <td class="px-4 py-2 border whitespace-nowrap">{{ $tool->nama_tool }}</td>
-                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $tool->kode_tool }}</td>
+                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $tool->lokasi }}</td>
                                             <td class="px-4 py-2 border whitespace-nowrap">{{ $tool->deskripsi }}</td>
                                             <td class="px-4 py-2 border">
                                                 @if($tool->status == 'baik')
@@ -236,9 +244,9 @@
                                             <td class="px-4 py-2 border text-center whitespace-nowrap">
                                                 <div class="flex items-center justify-center gap-2">
                                                     <span onclick="openEditModal({{ $tool->id }})"
-      class="inline-flex items-center justify-center px-2 py-1 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-md hover:bg-yellow-200 cursor-pointer">
-    ✏️ Edit
-</span>
+                                                        class="inline-flex items-center justify-center px-2 py-1 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-md hover:bg-yellow-200 cursor-pointer">
+                                                        ✏️ Edit
+                                                    </span>
 
                                                     <form action="{{ route('tools.destroy', $tool->id) }}" method="POST"
                                                         class="inline">
@@ -254,57 +262,66 @@
                                         </tr>
                                     @endforeach
                                     <!-- Edit Tool Modal -->
-<div id="editToolModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 class="text-lg font-bold mb-4">Edit Tool</h2>
+                                    <div id="editToolModal"
+                                        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                                        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                                            <h2 class="text-lg font-bold mb-4">Edit Tool</h2>
 
-        <form id="editToolForm" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <input type="hidden" name="tool_id" id="edit_tool_id">
+                                            <form id="editToolForm" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" name="tool_id" id="edit_tool_id">
 
-            <!-- Foto Tools -->
-            <div class="mb-4">
-                <label class="block text-sm text-gray-600">Foto Tools</label>
-                <input type="file" name="foto" id="edit_foto" accept="image/*" class="w-full border rounded-md p-2 mt-1">
-                <img id="edit_previewFoto" class="w-24 h-24 object-cover rounded mt-2 hidden">
-            </div>
+                                                <!-- Foto Tools -->
+                                                <div class="mb-4">
+                                                    <label class="block text-sm text-gray-600">Foto Tools</label>
+                                                    <input type="file" name="foto" id="edit_foto" accept="image/*"
+                                                        class="w-full border rounded-md p-2 mt-1">
+                                                    <img id="edit_previewFoto"
+                                                        class="w-24 h-24 object-cover rounded mt-2 hidden">
+                                                </div>
 
-            <!-- Code Tools -->
-            <div class="mb-4">
-                <label class="block text-sm text-gray-600">Code Tools</label>
-                <input type="text" name="kode_tool" id="edit_kode_tool" class="w-full border rounded-md p-2 mt-1" required>
-            </div>
+                                                <!-- Code Tools -->
+                                                <div class="mb-4">
+                                                    <label class="block text-sm text-gray-600">Code Tools</label>
+                                                    <input type="text" name="kode_tool" id="edit_kode_tool"
+                                                        class="w-full border rounded-md p-2 mt-1" required>
+                                                </div>
 
-            <!-- Nama Tools -->
-            <div class="mb-4">
-                <label class="block text-sm text-gray-600">Nama Tools</label>
-                <input type="text" name="nama_tool" id="edit_nama_tool" class="w-full border rounded-md p-2 mt-1" required>
-            </div>
+                                                <!-- Nama Tools -->
+                                                <div class="mb-4">
+                                                    <label class="block text-sm text-gray-600">Nama Tools</label>
+                                                    <input type="text" name="nama_tool" id="edit_nama_tool"
+                                                        class="w-full border rounded-md p-2 mt-1" required>
+                                                </div>
 
-            <!-- Status -->
-            <div class="mb-4">
-                <label class="block text-sm text-gray-600">Status</label>
-                <select name="status" id="edit_status" class="w-full border rounded-md p-2 mt-1" required>
-                    <option value="Baik">Baik</option>
-                    <option value="Rusak">Rusak</option>
-                </select>
-            </div>
+                                                <!-- Status -->
+                                                <div class="mb-4">
+                                                    <label class="block text-sm text-gray-600">Status</label>
+                                                    <select name="status" id="edit_status"
+                                                        class="w-full border rounded-md p-2 mt-1" required>
+                                                        <option value="Baik">Baik</option>
+                                                        <option value="Rusak">Rusak</option>
+                                                    </select>
+                                                </div>
 
-            <!-- Description -->
-            <div class="mb-4">
-                <label class="block text-sm text-gray-600">Description</label>
-                <input type="text" name="deskripsi" id="edit_deskripsi" class="w-full border rounded-md p-2 mt-1" required>
-            </div>
+                                                <!-- Description -->
+                                                <div class="mb-4">
+                                                    <label class="block text-sm text-gray-600">Description</label>
+                                                    <input type="text" name="deskripsi" id="edit_deskripsi"
+                                                        class="w-full border rounded-md p-2 mt-1" required>
+                                                </div>
 
-            <!-- Buttons -->
-            <div class="flex justify-end gap-2">
-                <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update</button>
-            </div>
-        </form>
-    </div>
-</div>
+                                                <!-- Buttons -->
+                                                <div class="flex justify-end gap-2">
+                                                    <button type="button" onclick="closeEditModal()"
+                                                        class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">Cancel</button>
+                                                    <button type="submit"
+                                                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
 
                                 </tbody>
                             </table>
@@ -415,43 +432,43 @@
         });
 
     </script>
-<script>
-    function openEditModal(toolId) {
-        fetch(`/tools/${toolId}/edit`)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('editToolForm').action = `/tools/${toolId}`;
-                document.getElementById('edit_tool_id').value = toolId;
-                document.getElementById('edit_kode_tool').value = data.kode_tool;
-                document.getElementById('edit_nama_tool').value = data.nama_tool;
-                document.getElementById('edit_status').value = data.status;
-                document.getElementById('edit_deskripsi').value = data.deskripsi;
+    <script>
+        function openEditModal(toolId) {
+            fetch(`/tools/${toolId}/edit`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('editToolForm').action = `/tools/${toolId}`;
+                    document.getElementById('edit_tool_id').value = toolId;
+                    document.getElementById('edit_kode_tool').value = data.kode_tool;
+                    document.getElementById('edit_nama_tool').value = data.nama_tool;
+                    document.getElementById('edit_status').value = data.status;
+                    document.getElementById('edit_deskripsi').value = data.deskripsi;
 
-                const preview = document.getElementById('edit_previewFoto');
-                if (data.foto) {
-                    preview.src = `/storage/${data.foto}`;
-                    preview.classList.remove('hidden');
-                } else {
-                    preview.classList.add('hidden');
-                }
+                    const preview = document.getElementById('edit_previewFoto');
+                    if (data.foto) {
+                        preview.src = `/storage/${data.foto}`;
+                        preview.classList.remove('hidden');
+                    } else {
+                        preview.classList.add('hidden');
+                    }
 
-                document.getElementById('editToolModal').classList.remove('hidden');
-            });
-    }
-
-    function closeEditModal() {
-        document.getElementById('editToolModal').classList.add('hidden');
-    }
-
-    document.getElementById('edit_foto').addEventListener('change', function(e) {
-        const preview = document.getElementById('edit_previewFoto');
-        const file = e.target.files[0];
-        if (file) {
-            preview.src = URL.createObjectURL(file);
-            preview.classList.remove('hidden');
+                    document.getElementById('editToolModal').classList.remove('hidden');
+                });
         }
-    });
-</script>
+
+        function closeEditModal() {
+            document.getElementById('editToolModal').classList.add('hidden');
+        }
+
+        document.getElementById('edit_foto').addEventListener('change', function (e) {
+            const preview = document.getElementById('edit_previewFoto');
+            const file = e.target.files[0];
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('hidden');
+            }
+        });
+    </script>
 
 
 @endsection

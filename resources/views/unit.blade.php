@@ -122,6 +122,13 @@
                             <span id="addText">+ Tambah Unit</span>
                             <span id="backText" class="hidden">← Kembali</span>
                         </button>
+                        
+                        
+                        <!-- Tombol Export -->
+                        <a href="{{ route('unit.export') }}"
+                            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
+                            📥 Export Excel
+                        </a>
 
                     </div>
 

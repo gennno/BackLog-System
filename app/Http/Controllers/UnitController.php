@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Exports\UnitExport;
 use Illuminate\Http\Request;
 use App\Models\Unit;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
 class UnitController extends Controller
@@ -12,6 +15,10 @@ class UnitController extends Controller
     {
         $units = Unit::latest()->paginate(10);
         return view('unit', compact('units'));
+    }
+        public function export()
+    {
+        return Excel::download(new UnitExport, 'unit.xlsx');
     }
 
     public function store(Request $request)

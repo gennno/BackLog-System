@@ -79,8 +79,6 @@
                         Hallo, {{ Auth::user()->name }}
                     </p>
                 </div>
-
-                <!-- Tombol Logout -->
                 <!-- Tombol Logout -->
                 <div>
                     <button id="logoutBtn"
@@ -131,7 +129,6 @@
                                 📥 Export Excel
                             </a>
                         </template>
-
 
                     </div>
 

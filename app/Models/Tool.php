@@ -12,7 +12,7 @@ class Tool extends Model
     protected $table = 'tools';
 
     protected $fillable = [
-        'kode_tool',
+        'lokasi',
         'nama_tool',
         'foto',
         'deskripsi',
