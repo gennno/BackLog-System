@@ -171,14 +171,14 @@
                             <div>
                                 <label class="block text-sm text-gray-600">HM</label>
                                 <input type="number" name="hm" class="w-full border rounded-md p-2 mt-1"
-                                    placeholder="Contoh: 12345">
+                                    placeholder="Contoh: 12345" required>
                             </div>
 
                             <!-- Component -->
                             <div>
                                 <label class="block text-sm text-gray-600">Component</label>
                                 <input type="text" name="component" class="w-full border rounded-md p-2 mt-1"
-                                    placeholder="Contoh: Final Drive">
+                                    placeholder="Contoh: Final Drive" required>
                             </div>
 
                             <!-- Evidence Temuan -->
@@ -199,14 +199,14 @@
                             <div>
                                 <label class="block text-sm text-gray-600">PIC Daily</label>
                                 <input type="text" name="pic_daily" class="w-full border rounded-md p-2 mt-1"
-                                    placeholder="Contoh: Siti Aminah">
+                                    placeholder="Contoh: Siti Aminah" >
                             </div>
 
                             <!-- GL PIC -->
                             <div>
                                 <label class="block text-sm text-gray-600">GL PIC</label>
                                 <input type="text" name="gl_pic" class="w-full border rounded-md p-2 mt-1"
-                                    placeholder="Contoh: Budi Santoso">
+                                    placeholder="Contoh: Budi Santoso" >
                             </div>
 
                             <!-- Status -->
@@ -222,7 +222,7 @@
                             <div>
                                 <label class="block text-sm text-gray-600">Nama Pembuat</label>
                                 <input type="text" name="nama_pembuat" class="w-full border rounded-md p-2 mt-1"
-                                    placeholder="Contoh: Admin">
+                                    placeholder="Contoh: Admin" required>
                             </div>
 
                             <!-- Deskripsi -->

@@ -67,7 +67,7 @@ if ($user->photo && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo))
 }
 
 
-    public function update(Request $request, User $user)
+public function update(Request $request, User $user)
 {
     $data = $request->validate([
         'name' => 'required|string|max:255',
@@ -78,31 +78,33 @@ if ($user->photo && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo))
         'photo' => 'nullable|image|max:2048',
     ]);
 
+    // Hash password if provided
     if ($request->filled('password')) {
         $data['password'] = Hash::make($data['password']);
     } else {
         unset($data['password']); // Don't update if empty
     }
 
-// Update method - photo upload
-if ($request->hasFile('photo')) {
-    // Delete old photo if exists
-    if ($user->photo && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo)) {
-        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo);
+    // Update photo if a new file is uploaded
+    if ($request->hasFile('photo')) {
+        // Delete old photo if exists
+        if ($user->photo && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo)) {
+            unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $user->photo);
+        }
+
+        $file = $request->file('photo');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $destination = $_SERVER['DOCUMENT_ROOT'] . '/profile_photos';
+        if (!file_exists($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $file->move($destination, $filename);
+        $data['photo'] = 'profile_photos/' . $filename; // store relative path in DB
+    } else {
+        unset($data['photo']); // prevent overwriting DB with null
     }
-
-    $file = $request->file('photo');
-    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-    $destination = $_SERVER['DOCUMENT_ROOT'] . '/profile_photos';
-    if (!file_exists($destination)) {
-        mkdir($destination, 0755, true);
-    }
-
-    $file->move($destination, $filename);
-    $data['photo'] = 'profile_photos/' . $filename; // store relative path in DB
-}
-
 
     $user->update($data);
 

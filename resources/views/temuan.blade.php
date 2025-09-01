@@ -327,7 +327,7 @@
                         class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
                         <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
                             <h3 class="text-lg font-semibold mb-4">Edit Temuan</h3>
-                            <form id="editForm" method="POST" enctype="multipart/form-data">
+                            <form id="editForm" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <div class="space-y-4">
@@ -370,8 +370,7 @@
                                     <div class="flex justify-end gap-2">
                                         <button type="button" onclick="closeEditModal()"
                                             class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Batal</button>
-                                        <button type="submit"
-                                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Simpan</button>
+                                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Simpan</button>
                                     </div>
                                 </div>
                             </form>
@@ -482,7 +481,7 @@
             document.getElementById('edit_deskripsi').value = deskripsi;
 
             // Set form action URL
-            document.getElementById('editForm').action = `/temuan/${id}`;
+            document.getElementById('editForm').action = "{{ url('temuan') }}/" + id;
 
             // Show modal
             document.getElementById('editModal').classList.remove('hidden');
@@ -584,27 +583,6 @@
 
             renderTable();
         });
-
-        // Modal functions
-        function editTemuan(id, tanggal, code, component, status, condition, deskripsi) {
-            document.getElementById("edit_tanggal_temuan").value = tanggal;
-            document.getElementById("edit_code_number").value = code;
-            document.getElementById("edit_component").value = component;
-            document.getElementById("edit_status").value = status;
-            document.getElementById("edit_condition").value = condition;
-            document.getElementById("edit_deskripsi").value = deskripsi;
-
-            const form = document.getElementById("editForm");
-            form.action = `/temuan/${id}`;
-
-            document.getElementById("editModal").classList.remove("hidden");
-            document.getElementById("editModal").classList.add("flex");
-        }
-
-        function closeEditModal() {
-            document.getElementById("editModal").classList.remove("flex");
-            document.getElementById("editModal").classList.add("hidden");
-        }
     </script>
 
 @endsection

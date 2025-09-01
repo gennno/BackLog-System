@@ -243,52 +243,61 @@
 
                     </div>
 
-                    <div class="bg-white rounded-xl shadow p-6">
-    <!-- Controls -->
-    <div class="flex justify-between items-center mb-4">
-        <div>
-            <label class="text-sm text-gray-600">Show</label>
-            <select id="perPage" class="border rounded px-2 py-1 text-sm">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-            </select>
-            <span class="text-sm text-gray-600 ml-1">entries</span>
-        </div>
-        <input type="text" id="searchInput" placeholder="🔍 Search..."
-            class="border rounded px-3 py-1 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-blue-400">
-    </div>
+                    <div id="tableContainer" class="bg-white rounded-xl shadow p-6">
+                        <!-- Controls -->
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <label class="text-sm text-gray-600">Show</label>
+                                <select id="perPage" class="border rounded px-2 py-1 text-sm">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select>
+                                <span class="text-sm text-gray-600 ml-1">entries</span>
+                            </div>
+                            <input type="text" id="searchInput" placeholder="🔍 Search..."
+                                class="border rounded px-3 py-1 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
 
-    <!-- Table -->
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg" id="dataTable">
-            <thead class="bg-gray-100 text-gray-700">
-    <tr>
-        <th class="px-4 py-2 border cursor-pointer" data-column="code_number">Nomor Lambung <span class="sort-icon"></span></th>
-        <th class="px-4 py-2 border cursor-pointer" data-column="component">Component <span class="sort-icon"></span></th>
-        <th class="px-4 py-2 border cursor-pointer" data-column="deskripsi">Deskripsi <span class="sort-icon"></span></th>
-        <th class="px-4 py-2 border cursor-pointer" data-column="tanggal_temuan">Tanggal <span class="sort-icon"></span></th>
-        <th class="px-4 py-2 border cursor-pointer" data-column="condition">Condition <span class="sort-icon"></span></th>
-        <th class="px-4 py-2 border cursor-pointer" data-column="status">Status <span class="sort-icon"></span></th>
-        <th class="px-4 py-2 border text-center">Aksi</th>
-    </tr>
-</thead>
+                        <!-- Table -->
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg"
+                                id="dataTable">
+                                <thead class="bg-gray-100 text-gray-700">
+                                    <tr>
+                                        <th class="px-4 py-2 border cursor-pointer" data-column="code_number">Nomor Lambung
+                                            <span class="sort-icon"></span>
+                                        </th>
+                                        <th class="px-4 py-2 border cursor-pointer" data-column="component">Component <span
+                                                class="sort-icon"></span></th>
+                                        <th class="px-4 py-2 border cursor-pointer" data-column="deskripsi">Deskripsi <span
+                                                class="sort-icon"></span></th>
+                                        <th class="px-4 py-2 border cursor-pointer" data-column="tanggal_temuan">Tanggal
+                                            <span class="sort-icon"></span>
+                                        </th>
+                                        <th class="px-4 py-2 border cursor-pointer" data-column="condition">Condition <span
+                                                class="sort-icon"></span></th>
+                                        <th class="px-4 py-2 border cursor-pointer" data-column="status">Status <span
+                                                class="sort-icon"></span></th>
+                                        <th class="px-4 py-2 border text-center">Aksi</th>
+                                    </tr>
+                                </thead>
 
-            <tbody id="tableBody" class="divide-y divide-gray-200 text-gray-800">
-                <!-- rows will be injected here -->
-            </tbody>
-        </table>
-    </div>
+                                <tbody id="tableBody" class="divide-y divide-gray-200 text-gray-800">
+                                    <!-- rows will be injected here -->
+                                </tbody>
+                            </table>
+                        </div>
 
-    <!-- Pagination -->
-    <div class="mt-4 flex justify-between text-sm text-gray-600">
-        <span id="tableInfo"></span>
-        <div class="space-x-2">
-            <button id="prevPage" class="px-2 py-1 border rounded disabled:opacity-50">Prev</button>
-            <button id="nextPage" class="px-2 py-1 border rounded disabled:opacity-50">Next</button>
-        </div>
-    </div>
-</div>
+                        <!-- Pagination -->
+                        <div class="mt-4 flex justify-between text-sm text-gray-600">
+                            <span id="tableInfo"></span>
+                            <div class="space-x-2">
+                                <button id="prevPage" class="px-2 py-1 border rounded disabled:opacity-50">Prev</button>
+                                <button id="nextPage" class="px-2 py-1 border rounded disabled:opacity-50">Next</button>
+                            </div>
+                        </div>
+                    </div>
 
 
 
@@ -307,143 +316,143 @@
 
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const rows = @json($backlogs);
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = @json($backlogs);
 
-        let currentPage = 1;
-        let perPage = 10;
-        let searchQuery = "";
-        let sortColumn = null;
-        let sortAsc = true;
+            let currentPage = 1;
+            let perPage = 10;
+            let searchQuery = "";
+            let sortColumn = null;
+            let sortAsc = true;
 
-        const tableBody = document.getElementById("tableBody");
-        const searchInput = document.getElementById("searchInput");
-        const perPageSelect = document.getElementById("perPage");
-        const tableInfo = document.getElementById("tableInfo");
-        const prevBtn = document.getElementById("prevPage");
-        const nextBtn = document.getElementById("nextPage");
+            const tableBody = document.getElementById("tableBody");
+            const searchInput = document.getElementById("searchInput");
+            const perPageSelect = document.getElementById("perPage");
+            const tableInfo = document.getElementById("tableInfo");
+            const prevBtn = document.getElementById("prevPage");
+            const nextBtn = document.getElementById("nextPage");
 
-        function updateSortIcons() {
-            document.querySelectorAll("th[data-column]").forEach(th => {
-                const col = th.getAttribute("data-column");
-                const icon = th.querySelector(".sort-icon");
-                icon.textContent = "";
-                if (col === sortColumn) {
-                    icon.textContent = sortAsc ? "▲" : "▼";
+            function updateSortIcons() {
+                document.querySelectorAll("th[data-column]").forEach(th => {
+                    const col = th.getAttribute("data-column");
+                    const icon = th.querySelector(".sort-icon");
+                    icon.textContent = "";
+                    if (col === sortColumn) {
+                        icon.textContent = sortAsc ? "▲" : "▼";
+                    }
+                });
+            }
+
+            function renderTable() {
+                let filtered = rows.filter(row => {
+                    return Object.values(row).some(val =>
+                        String(val).toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                });
+
+                if (sortColumn) {
+                    filtered.sort((a, b) => {
+                        let x = a[sortColumn] ?? "";
+                        let y = b[sortColumn] ?? "";
+                        if (typeof x === "string") x = x.toLowerCase();
+                        if (typeof y === "string") y = y.toLowerCase();
+                        if (x < y) return sortAsc ? -1 : 1;
+                        if (x > y) return sortAsc ? 1 : -1;
+                        return 0;
+                    });
                 }
-            });
-        }
 
-        function renderTable() {
-            let filtered = rows.filter(row => {
-                return Object.values(row).some(val =>
-                    String(val).toLowerCase().includes(searchQuery.toLowerCase())
-                );
-            });
+                const total = filtered.length;
+                const start = (currentPage - 1) * perPage;
+                const end = Math.min(start + perPage, total);
+                const paginated = filtered.slice(start, end);
 
-            if (sortColumn) {
-                filtered.sort((a, b) => {
-                    let x = a[sortColumn] ?? "";
-                    let y = b[sortColumn] ?? "";
-                    if (typeof x === "string") x = x.toLowerCase();
-                    if (typeof y === "string") y = y.toLowerCase();
-                    if (x < y) return sortAsc ? -1 : 1;
-                    if (x > y) return sortAsc ? 1 : -1;
-                    return 0;
-                });
-            }
-
-            const total = filtered.length;
-            const start = (currentPage - 1) * perPage;
-            const end = Math.min(start + perPage, total);
-            const paginated = filtered.slice(start, end);
-
-            tableBody.innerHTML = "";
-            if (paginated.length === 0) {
-                tableBody.innerHTML = `
-                    <tr><td colspan="7" class="text-center py-4 text-gray-500">No backlog data</td></tr>
-                `;
-            } else {
-                paginated.forEach(item => {
-                    let conditionClass =
-                        item.condition === "Urgent" ? "text-red-800 bg-red-200" :
-                        item.condition === "Caution" ? "text-yellow-800 bg-yellow-200" :
-                        "text-green-800 bg-green-200";
-
-                    tableBody.innerHTML += `
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-2 border">${item.code_number}</td>
-                            <td class="px-4 py-2 border">${item.component}</td>
-                            <td class="px-4 py-2 border">${item.deskripsi}</td>
-                            <td class="px-4 py-2 border">${item.tanggal_temuan}</td>
-                            <td class="px-4 py-2 border">
-                                <span class="inline-block px-2 py-1 text-xs font-semibold ${conditionClass} rounded-full">${item.condition}</span>
-                            </td>
-                            <td class="px-4 py-2 border">${item.status}</td>
-                            <td class="px-4 py-2 border text-center">
-                                <a href="/tindakan/${item.id}" class="inline-flex px-2 py-1 bg-green-200 text-black text-sm rounded hover:bg-yellow-200">✅ Tindak</a>
-                                <form action="/tindakan/${item.id}" method="POST" class="inline" onsubmit="return confirm('Delete this data?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="inline-flex px-2 py-1 bg-red-100 text-red-700 text-sm rounded hover:bg-red-200">🗑️ Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-
-            tableInfo.textContent = `Showing ${start + 1} to ${end} of ${total} entries`;
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = end >= total;
-
-            // update icons
-            updateSortIcons();
-        }
-
-        // Events
-        searchInput.addEventListener("input", e => {
-            searchQuery = e.target.value;
-            currentPage = 1;
-            renderTable();
-        });
-
-        perPageSelect.addEventListener("change", e => {
-            perPage = parseInt(e.target.value);
-            currentPage = 1;
-            renderTable();
-        });
-
-        prevBtn.addEventListener("click", () => {
-            if (currentPage > 1) {
-                currentPage--;
-                renderTable();
-            }
-        });
-
-        nextBtn.addEventListener("click", () => {
-            currentPage++;
-            renderTable();
-        });
-
-        document.querySelectorAll("th[data-column]").forEach(th => {
-            th.addEventListener("click", () => {
-                const col = th.getAttribute("data-column");
-                if (sortColumn === col) {
-                    sortAsc = !sortAsc;
+                tableBody.innerHTML = "";
+                if (paginated.length === 0) {
+                    tableBody.innerHTML = `
+                            <tr><td colspan="7" class="text-center py-4 text-gray-500">No backlog data</td></tr>
+                        `;
                 } else {
-                    sortColumn = col;
-                    sortAsc = true;
+                    paginated.forEach(item => {
+                        let conditionClass =
+                            item.condition === "Urgent" ? "text-red-800 bg-red-200" :
+                                item.condition === "Caution" ? "text-yellow-800 bg-yellow-200" :
+                                    "text-green-800 bg-green-200";
+
+                        tableBody.innerHTML += `
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-2 border">${item.code_number}</td>
+                                    <td class="px-4 py-2 border">${item.component}</td>
+                                    <td class="px-4 py-2 border">${item.deskripsi}</td>
+                                    <td class="px-4 py-2 border">${item.tanggal_temuan}</td>
+                                    <td class="px-4 py-2 border">
+                                        <span class="inline-block px-2 py-1 text-xs font-semibold ${conditionClass} rounded-full">${item.condition}</span>
+                                    </td>
+                                    <td class="px-4 py-2 border">${item.status}</td>
+                                    <td class="px-4 py-2 border text-center">
+                                        <a href="/tindakan/${item.id}" class="inline-flex px-2 py-1 bg-green-200 text-black text-sm rounded hover:bg-yellow-200">✅ Tindak</a>
+                                        <form action="/tindakan/${item.id}" method="POST" class="inline" onsubmit="return confirm('Delete this data?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="inline-flex px-2 py-1 bg-red-100 text-red-700 text-sm rounded hover:bg-red-200">🗑️ Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            `;
+                    });
                 }
+
+                tableInfo.textContent = `Showing ${start + 1} to ${end} of ${total} entries`;
+                prevBtn.disabled = currentPage === 1;
+                nextBtn.disabled = end >= total;
+
+                // update icons
+                updateSortIcons();
+            }
+
+            // Events
+            searchInput.addEventListener("input", e => {
+                searchQuery = e.target.value;
+                currentPage = 1;
                 renderTable();
             });
-        });
 
-        // initial render
-        renderTable();
-    });
-</script>
+            perPageSelect.addEventListener("change", e => {
+                perPage = parseInt(e.target.value);
+                currentPage = 1;
+                renderTable();
+            });
+
+            prevBtn.addEventListener("click", () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                }
+            });
+
+            nextBtn.addEventListener("click", () => {
+                currentPage++;
+                renderTable();
+            });
+
+            document.querySelectorAll("th[data-column]").forEach(th => {
+                th.addEventListener("click", () => {
+                    const col = th.getAttribute("data-column");
+                    if (sortColumn === col) {
+                        sortAsc = !sortAsc;
+                    } else {
+                        sortColumn = col;
+                        sortAsc = true;
+                    }
+                    renderTable();
+                });
+            });
+
+            // initial render
+            renderTable();
+        });
+    </script>
 
 
     <script>
@@ -498,30 +507,29 @@
         document.addEventListener('DOMContentLoaded', () => {
             const toggleBtn = document.getElementById('toggleFormBtn');
             const form = document.getElementById('formTemuan');
-            const table = document.getElementById('tabelTemuan');
+            const tableWrapper = document.getElementById('tableContainer');
             const addText = document.getElementById('addText');
             const backText = document.getElementById('backText');
 
             toggleBtn.addEventListener('click', () => {
-                const isHidden = form.classList.contains('hidden');
-
                 form.classList.toggle('hidden');
-                table.classList.toggle('hidden');
+                tableWrapper.classList.toggle('hidden');
 
                 addText.classList.toggle('hidden');
                 backText.classList.toggle('hidden');
             });
 
-            // Tombol Cancel (jika ada)
-            const cancelBtn = document.querySelector('button[type="button"]');
+            // Cancel button inside the form
+            const cancelBtn = form.querySelector('button[type="button"]');
             if (cancelBtn) {
                 cancelBtn.addEventListener('click', () => {
                     form.classList.add('hidden');
-                    table.classList.remove('hidden');
+                    tableWrapper.classList.remove('hidden');
                     addText.classList.remove('hidden');
                     backText.classList.add('hidden');
                 });
             }
         });
     </script>
+
 @endsection

@@ -232,40 +232,40 @@
                                 </thead>
                                 <tbody class="text-gray-800">
                                     @foreach($users as $user)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $user->id }}</td>
-                                            <td class="px-4 py-2 border whitespace-nowrap">
-                                                <img src="{{ $user->photo ? asset('storage/' . $user->photo) : '/img/default-profile.jpg' }}"
-                                                    alt="Foto Profil" class="w-14 h-14 object-cover rounded-full">
-                                            </td>
-                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $user->email }}</td>
-                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $user->name }}</td>
-                                            <td class="px-4 py-2 border">
-                                                <span
-    class="inline-block px-2 py-1 text-xs font-semibold text-black rounded-full
-        {{ $user->role === 'admin' ? 'bg-blue-300' : 'bg-green-300' }}">
-    {{ $user->role }}
-</span>
+                                                                <tr class="hover:bg-gray-50">
+                                                                    <td class="px-4 py-2 border whitespace-nowrap">{{ $user->id }}</td>
+                                                                    <td class="px-4 py-2 border whitespace-nowrap">
+                                                                        <img src="{{ $user->photo ? url($user->photo) : '/img/default-profile.jpg' }}"
+     alt="Foto Profil" class="w-14 h-14 object-cover rounded-full">
 
-                                            </td>
-                                            <td class="px-4 py-2 border text-center whitespace-nowrap">
-                                                <div class="flex items-center justify-center gap-2">
-                                                    <span
-                                                        class="inline-flex items-center justify-center px-2 py-1 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-md hover:bg-yellow-200 cursor-pointer editBtn"
-                                                        data-id="{{ $user->id }}" data-name="{{ $user->name }}"
-                                                        data-email="{{ $user->email }}" data-role="{{ $user->role }}"
-                                                        data-photo="{{ $user->photo ? asset('storage/' . $user->photo) : '/img/default-profile.jpg' }}">
-                                                        ✏️ Edit
-                                                    </span>
-                                                    <span
-                                                        class="inline-flex items-center justify-center px-2 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-md hover:bg-red-200 cursor-pointer deleteBtn"
-                                                        data-id="{{ $user->id }}" data-name="{{ $user->name }}">
-                                                        🗑️ Hapus
-                                                    </span>
+                                                                    </td>
+                                                                    <td class="px-4 py-2 border whitespace-nowrap">{{ $user->email }}</td>
+                                                                    <td class="px-4 py-2 border whitespace-nowrap">{{ $user->name }}</td>
+                                                                    <td class="px-4 py-2 border">
+                                                                        <span class="inline-block px-2 py-1 text-xs font-semibold text-black rounded-full
+                                        {{ $user->role === 'admin' ? 'bg-blue-300' : 'bg-green-300' }}">
+                                                                            {{ $user->role }}
+                                                                        </span>
 
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                                    </td>
+                                                                    <td class="px-4 py-2 border text-center whitespace-nowrap">
+                                                                        <div class="flex items-center justify-center gap-2">
+                                                                            <span
+                                                                                class="inline-flex items-center justify-center px-2 py-1 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-md hover:bg-yellow-200 cursor-pointer editBtn"
+                                                                                data-id="{{ $user->id }}" data-name="{{ $user->name }}"
+                                                                                data-email="{{ $user->email }}" data-role="{{ $user->role }}"
+                                                                                data-photo="{{ $user->photo ? url($user->photo) : '/img/default-profile.jpg' }}">
+                                                                                ✏️ Edit
+                                                                            </span>
+                                                                            <span
+                                                                                class="inline-flex items-center justify-center px-2 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-md hover:bg-red-200 cursor-pointer deleteBtn"
+                                                                                data-id="{{ $user->id }}" data-name="{{ $user->name }}">
+                                                                                🗑️ Hapus
+                                                                            </span>
+
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
                                     @endforeach
                                 </tbody>
 
