@@ -30,7 +30,13 @@ public function store(Request $request)
     if ($request->hasFile('evidence')) {
         $file = $request->file('evidence');
         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/evidence'), $filename);
+
+        $destination = base_path('public_html/uploads/evidence');
+        if (!file_exists($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $file->move($destination, $filename);
         $evidencePath = 'uploads/evidence/' . $filename; // store relative path
     }
 

@@ -31,9 +31,19 @@ class UnitController extends Controller
             'foto' => 'nullable|image|max:2048',
         ]);
 
-        if($request->hasFile('foto')){
-            $data['foto'] = $request->file('foto')->store('unit_photos','public');
-        }
+// Store method
+if ($request->hasFile('foto')) {
+    $file = $request->file('foto');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = base_path('public_html/unit_photos');
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $file->move($destination, $filename);
+    $data['foto'] = 'unit_photos/' . $filename;
+}
 
         Unit::create($data);
         return redirect()->route('unit.index')->with('success','Unit berhasil ditambahkan.');
@@ -54,12 +64,24 @@ public function update(Request $request, Unit $unit)
         'foto' => 'nullable|image|max:2048',
     ]);
 
-    if($request->hasFile('foto')){
-        if($unit->foto && Storage::disk('public')->exists($unit->foto)){
-            Storage::disk('public')->delete($unit->foto);
-        }
-        $data['foto'] = $request->file('foto')->store('unit_photos','public');
+// Update method
+if ($request->hasFile('foto')) {
+    // Delete old file if exists
+    if ($unit->foto && file_exists(base_path('public_html/' . $unit->foto))) {
+        unlink(base_path('public_html/' . $unit->foto));
     }
+
+    $file = $request->file('foto');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = base_path('public_html/unit_photos');
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $file->move($destination, $filename);
+    $data['foto'] = 'unit_photos/' . $filename;
+}
 
     $unit->update($data);
 

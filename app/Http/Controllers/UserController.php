@@ -29,10 +29,19 @@ class UserController extends Controller
             'photo' => 'nullable|image|max:2048', // max 2MB
         ]);
 
-        // Handle photo upload
-        if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('profile_photos', 'public');
-        }
+// Store method - photo upload
+if ($request->hasFile('photo')) {
+    $file = $request->file('photo');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = base_path('public_html/profile_photos');
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $file->move($destination, $filename);
+    $data['photo'] = 'profile_photos/' . $filename;
+}
 
         // Hash password
         $data['password'] = Hash::make($data['password']);
@@ -46,9 +55,10 @@ class UserController extends Controller
     // Optional: delete user
     public function destroy(User $user)
 {
-    if ($user->photo && Storage::disk('public')->exists($user->photo)) {
-        Storage::disk('public')->delete($user->photo);
-    }
+// Destroy method - delete photo
+if ($user->photo && file_exists(base_path('public_html/' . $user->photo))) {
+    unlink(base_path('public_html/' . $user->photo));
+}
 
     $user->delete();
 
@@ -73,13 +83,24 @@ class UserController extends Controller
         unset($data['password']); // Don't update if empty
     }
 
-    if ($request->hasFile('photo')) {
-        if ($user->photo && Storage::disk('public')->exists($user->photo)) {
-            Storage::disk('public')->delete($user->photo);
-        }
-        $data['photo'] = $request->file('photo')->store('profile_photos', 'public');
+// Update method - photo upload
+if ($request->hasFile('photo')) {
+    // Delete old photo if exists
+    if ($user->photo && file_exists(base_path('public_html/' . $user->photo))) {
+        unlink(base_path('public_html/' . $user->photo));
     }
 
+    $file = $request->file('photo');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = base_path('public_html/profile_photos');
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $file->move($destination, $filename);
+    $data['photo'] = 'profile_photos/' . $filename;
+}
     $user->update($data);
 
     return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil diperbarui!');

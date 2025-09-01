@@ -118,8 +118,9 @@
                         <label class="block text-sm font-medium text-gray-600 mb-1">Foto Profil</label>
                         <!-- Foto Profil -->
                         <div class="flex items-center gap-4">
-                            <img src="{{ auth()->user()->photo ? asset('storage/' . auth()->user()->photo) : '/img/default-profile.jpg' }}"
-                                alt="Profile Picture" class="w-16 h-16 rounded-full object-cover border" id="previewFoto">
+                            <img src="{{ auth()->user()->photo ? asset(auth()->user()->photo) : asset('img/default-profile.jpg') }}"
+     alt="Profile Picture" class="w-16 h-16 rounded-full object-cover border" id="previewFoto">
+
                             <input type="file" name="photo" accept="image/*" class="text-sm" id="photoInput">
                         </div>
 

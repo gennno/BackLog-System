@@ -31,7 +31,7 @@ public function store(Request $request)
     if ($request->hasFile('foto')) {
         $file = $request->file('foto');
         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('tool_photos'), $filename);
+        $file->move(base_path('public_html/tool_photos'), $filename);
         $data['foto'] = 'tool_photos/' . $filename; // relative path
     }
 
@@ -63,7 +63,7 @@ public function update(Request $request, Tool $tool)
 
         $file = $request->file('foto');
         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('tool_photos'), $filename);
+        $file->move(base_path('public_html/tool_photos'), $filename);
 
         $data['foto'] = 'tool_photos/' . $filename; // relative path
     }

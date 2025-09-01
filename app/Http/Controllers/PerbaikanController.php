@@ -37,19 +37,32 @@ public function store(Request $request)
         'deskripsi' => 'nullable|string',
     ]);
 
-    if ($request->hasFile('evidence_temuan')) {
-        $file = $request->file('evidence_temuan');
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/evidences'), $filename);
-        $data['evidence_temuan'] = 'uploads/evidences/' . $filename;
+// Store method
+if ($request->hasFile('evidence_temuan')) {
+    $file = $request->file('evidence_temuan');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = base_path('public_html/uploads/evidences');
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
     }
 
-    if ($request->hasFile('evidence_perbaikan')) {
-        $file = $request->file('evidence_perbaikan');
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/evidence_perbaikan'), $filename);
-        $data['evidence_perbaikan'] = 'uploads/evidence_perbaikan/' . $filename;
+    $file->move($destination, $filename);
+    $data['evidence_temuan'] = 'uploads/evidences/' . $filename;
+}
+
+if ($request->hasFile('evidence_perbaikan')) {
+    $file = $request->file('evidence_perbaikan');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = base_path('public_html/uploads/evidence_perbaikan');
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
     }
+
+    $file->move($destination, $filename);
+    $data['evidence_perbaikan'] = 'uploads/evidence_perbaikan/' . $filename;
+}
 
     Repair::create($data);
 
@@ -78,18 +91,25 @@ public function update(Request $request, $id)
 
     $repair = Repair::findOrFail($id);
 
-    if ($request->hasFile('evidence_perbaikan')) {
-        // delete old file
-        if ($repair->evidence_perbaikan && file_exists(public_path($repair->evidence_perbaikan))) {
-            unlink(public_path($repair->evidence_perbaikan));
-        }
-
-        // store new file
-        $file = $request->file('evidence_perbaikan');
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/evidence_perbaikan'), $filename);
-        $validated['evidence_perbaikan'] = 'uploads/evidence_perbaikan/' . $filename;
+// Update method
+if ($request->hasFile('evidence_perbaikan')) {
+    // delete old file
+    if ($repair->evidence_perbaikan && file_exists(base_path('public_html/' . $repair->evidence_perbaikan))) {
+        unlink(base_path('public_html/' . $repair->evidence_perbaikan));
     }
+
+    // store new file
+    $file = $request->file('evidence_perbaikan');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    $destination = base_path('public_html/uploads/evidence_perbaikan');
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $file->move($destination, $filename);
+    $validated['evidence_perbaikan'] = 'uploads/evidence_perbaikan/' . $filename;
+}
 
     $repair->update($validated);
 
