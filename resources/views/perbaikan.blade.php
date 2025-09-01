@@ -123,7 +123,7 @@
                             <span id="backText" class="hidden">← Kembali</span>
                         </button>
 
-                        
+
                         <!-- Tombol Export -->
                         <a href="{{ route('perbaikan.export') }}"
                             class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
@@ -367,22 +367,47 @@
                                                             class="w-full border p-2 rounded">
                                                     </div>
 
-                                                    <!-- Readonly: Evidence Temuan -->
+                                                    
+                                                    <!-- Status (default Open) -->
                                                     <div>
-                                                        <label for="edit_evidence_temuan"
-                                                            class="block text-sm font-medium">Evidence Temuan</label>
+                                                        <label for="edit_status"
+                                                            class="block text-sm font-medium">Status</label>
+                                                        <select name="status" id="edit_status"
+                                                            class="w-full border p-2 rounded" required>
+                                                            <option value="Open" selected>Open</option>
+                                                            <option value="Closed">Closed</option>
+                                                        </select>
+
+                                                    </div>
+
+                                                    <!-- Evidence Temuan (readonly + preview) -->
+                                                    <div>
+                                                        <label class="block text-sm font-medium">Evidence Temuan</label>
+
+                                                        <!-- Preview image -->
+                                                        <img id="edit_previewEvidenceTemuan" src="" alt="Evidence Temuan"
+                                                            class="w-32 h-32 object-cover rounded hidden mb-2">
+
+                                                        <!-- Readonly input showing filename/path -->
                                                         <input type="text" name="evidence_temuan" id="edit_evidence_temuan"
                                                             class="w-full border p-2 rounded bg-gray-100" readonly>
                                                     </div>
 
-                                                    <!-- Evidence Perbaikan (uploadable) -->
+                                                    <!-- Evidence Perbaikan (uploadable + preview) -->
                                                     <div>
                                                         <label for="edit_evidence_perbaikan"
                                                             class="block text-sm font-medium">Evidence Perbaikan</label>
+
+                                                        <img id="edit_previewEvidencePerbaikan" src=""
+                                                            alt="Evidence Perbaikan"
+                                                            class="w-32 h-32 object-cover rounded hidden mb-2">
+
                                                         <input type="file" name="evidence_perbaikan"
                                                             id="edit_evidence_perbaikan" accept="image/*"
                                                             class="w-full border p-2 rounded">
                                                     </div>
+
+
 
                                                     <!-- PIC Daily -->
                                                     <div>
@@ -405,18 +430,6 @@
                                                         <label for="edit_pic" class="block text-sm font-medium">PIC</label>
                                                         <input type="text" name="pic" id="edit_pic"
                                                             class="w-full border p-2 rounded">
-                                                    </div>
-
-                                                    <!-- Status (default Open) -->
-                                                    <div>
-                                                        <label for="edit_status"
-                                                            class="block text-sm font-medium">Status</label>
-                                                        <select name="status" id="edit_status"
-                                                            class="w-full border p-2 rounded" required>
-                                                            <option value="Open" selected>Open</option>
-                                                            <option value="Closed">Closed</option>
-                                                        </select>
-
                                                     </div>
 
                                                     <!-- Readonly: Nama Pembuat -->
@@ -553,10 +566,10 @@
 
     <script>
         function openEditModal(repair) {
-            // Set form action to the update route
+            // Set form action
             document.getElementById('editForm').action = `/perbaikan/${repair.id}`;
 
-            // Fill the form fields
+            // Fill fields
             document.getElementById('edit_id_backlog').value = repair.id_backlog;
             document.getElementById('edit_kode_unit').value = repair.kode_unit;
             document.getElementById('edit_tanggal').value = repair.tanggal;
@@ -570,6 +583,31 @@
             document.getElementById('edit_nama_pembuat').value = repair.nama_pembuat;
             document.getElementById('edit_deskripsi').value = repair.deskripsi;
 
+            // ✅ Show preview of Evidence Temuan (readonly)
+            const temuanPreview = document.getElementById('edit_previewEvidenceTemuan');
+            if (repair.evidence_temuan) {
+                // If DB only stores filename, prepend uploads folder
+                temuanPreview.src = repair.evidence_temuan.startsWith('uploads/')
+                    ? `/${repair.evidence_temuan}`
+                    : `/uploads/evidences/${repair.evidence_temuan}`;
+
+                temuanPreview.classList.remove('hidden');
+            } else {
+                temuanPreview.classList.add('hidden');
+            }
+
+            // ✅ Show preview of Evidence Perbaikan
+            const perbaikanPreview = document.getElementById('edit_previewEvidencePerbaikan');
+            if (repair.evidence_perbaikan) {
+                perbaikanPreview.src = repair.evidence_perbaikan.startsWith('uploads/')
+                    ? `/${repair.evidence_perbaikan}`
+                    : `/uploads/evidences/${repair.evidence_perbaikan}`;
+
+                perbaikanPreview.classList.remove('hidden');
+            } else {
+                perbaikanPreview.classList.add('hidden');
+            }
+
             // Show the modal
             document.getElementById('editModal').classList.remove('hidden');
         }
@@ -577,7 +615,19 @@
         function closeEditModal() {
             document.getElementById('editModal').classList.add('hidden');
         }
+
+        // ✅ Live preview when uploading new Evidence Perbaikan
+        document.getElementById('edit_evidence_perbaikan').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('edit_previewEvidencePerbaikan');
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('hidden');
+            }
+        });
     </script>
+
+
 
 
 

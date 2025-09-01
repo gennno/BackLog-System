@@ -17,59 +17,62 @@ class ToolController extends Controller
         return view('tools', compact('tools'));
     }
 
-    // Store new tool
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'lokasi'    => 'required|string',
-            'nama_tool' => 'required|string',
-            'status'    => 'required|in:Baik,Rusak',
-            'deskripsi' => 'required|string',
-            'foto'      => 'nullable|image|max:2048',
-        ]);
+// Store new tool
+public function store(Request $request)
+{
+    $data = $request->validate([
+        'lokasi'    => 'required|string',
+        'nama_tool' => 'required|string',
+        'status'    => 'required|in:Baik,Rusak',
+        'deskripsi' => 'required|string',
+        'foto'      => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:2048',
+    ]);
 
-        if ($request->hasFile('foto')) {
-    $filename = time() . '.' . $request->foto->extension();
-    $request->foto->move(public_path('tool_photos'), $filename);
-    $data['foto'] = 'tool_photos/' . $filename;
+    if ($request->hasFile('foto')) {
+        $file = $request->file('foto');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('tool_photos'), $filename);
+        $data['foto'] = 'tool_photos/' . $filename; // relative path
+    }
+
+    Tool::create($data);
+
+    return redirect()->route('tools.index')->with('success', 'Tool berhasil ditambahkan!');
 }
 
+public function edit(Tool $tool)
+{
+    return response()->json($tool); // for JS modal to fill form
+}
 
-        Tool::create($data);
+public function update(Request $request, Tool $tool)
+{
+    $data = $request->validate([
+        'lokasi'    => 'required|string',
+        'nama_tool' => 'required|string',
+        'status'    => 'required|in:Baik,Rusak',
+        'deskripsi' => 'required|string',
+        'foto'      => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:2048',
+    ]);
 
-        return redirect()->route('tools.index')->with('success', 'Tool berhasil ditambahkan!');
-    }
-
-    public function edit(Tool $tool)
-    {
-        return response()->json($tool); // for JS modal to fill form
-    }
-
-    public function update(Request $request, Tool $tool)
-    {
-        $data = $request->validate([
-            'lokasi'    => 'required|string',
-            'nama_tool' => 'required|string',
-            'status'    => 'required|in:Baik,Rusak',
-            'deskripsi' => 'required|string',
-            'foto'      => 'nullable|image|max:2048',
-        ]);
-
-        if ($request->hasFile('foto')) {
-            // hapus foto lama jika ada
-            if ($tool->foto && file_exists(public_path('storage/' . $tool->foto))) {
-                unlink(public_path('storage/' . $tool->foto));
-            }
-
-            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
-            $request->file('foto')->move(public_path('storage/tool_photos'), $filename);
-            $data['foto'] = 'tool_photos/' . $filename;
+    if ($request->hasFile('foto')) {
+        // delete old photo if exists
+        if ($tool->foto && file_exists(public_path($tool->foto))) {
+            unlink(public_path($tool->foto));
         }
 
-        $tool->update($data);
+        $file = $request->file('foto');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('tool_photos'), $filename);
 
-        return redirect()->route('tools.index')->with('success', 'Tool berhasil diupdate!');
+        $data['foto'] = 'tool_photos/' . $filename; // relative path
     }
+
+    $tool->update($data);
+
+    return redirect()->route('tools.index')->with('success', 'Tool berhasil diupdate!');
+}
+
 
     // Delete tool
     public function destroy(Tool $tool)

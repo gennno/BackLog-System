@@ -243,93 +243,54 @@
 
                     </div>
 
-                    <!-- Table Section -->
-                    <div id="tabelTemuan" class="bg-white rounded-xl shadow p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <div>
-                                <label class="text-sm text-gray-600">Show</label>
-                                <select class="border rounded px-2 py-1 text-sm">
-                                    <option>10</option>
-                                    <option selected>25</option>
-                                    <option>50</option>
-                                </select>
-                                <span class="text-sm text-gray-600 ml-1">entries</span>
-                            </div>
-                            <input type="text" placeholder="🔍 Search..."
-                                class="border rounded px-3 py-1 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        </div>
+                    <div class="bg-white rounded-xl shadow p-6">
+    <!-- Controls -->
+    <div class="flex justify-between items-center mb-4">
+        <div>
+            <label class="text-sm text-gray-600">Show</label>
+            <select id="perPage" class="border rounded px-2 py-1 text-sm">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+            <span class="text-sm text-gray-600 ml-1">entries</span>
+        </div>
+        <input type="text" id="searchInput" placeholder="🔍 Search..."
+            class="border rounded px-3 py-1 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
 
-                        <div class="overflow-x-auto">
-                            <table class="table-auto w-full text-sm text-left border border-gray-300">
-                                <thead>
-                                    <tr class="bg-gray-100 text-gray-700">
-                                        <th class="px-4 py-2 border whitespace-nowrap">Nomor Lambung</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Component</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Deskripsi</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Tanggal</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Condition</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Status</th>
-                                        <th class="px-4 py-2 border text-center whitespace-nowrap">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-gray-800">
-                                    @forelse ($backlogs as $item)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $item->code_number }}</td>
-                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $item->component }}</td>
-                                            <td class="px-4 py-2 border">{{ $item->deskripsi }}</td>
-                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $item->tanggal_temuan }}</td>
-                                            <td class="px-4 py-2 border">
-                                                @php
-                                                    $color = match ($item->condition) {
-                                                        'Urgent' => 'text-red-800 bg-red-200',
-                                                        'Caution' => 'text-yellow-800 bg-yellow-200',
-                                                        default => 'text-green-800 bg-green-200',
-                                                    };
-                                                @endphp
-                                                <span
-                                                    class="inline-block px-2 py-1 text-xs font-semibold {{ $color }} rounded-full">
-                                                    {{ $item->condition }}
-                                                </span>
-                                            </td>
-                                            <td class="px-4 py-2 border whitespace-nowrap">{{ $item->status }}</td>
-                                            <td class="px-4 py-2 border text-center whitespace-nowrap">
-                                                <div class="flex items-center justify-center gap-2">
-                                                    <a href="{{ route('detail-tindakan', $item->id) }}"
-                                                        class="inline-flex items-center justify-center px-2 py-1 bg-green-200 text-black text-sm font-medium rounded-md hover:bg-yellow-200 cursor-pointer">
-                                                        ✅ Tindak
-                                                    </a>
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg" id="dataTable">
+            <thead class="bg-gray-100 text-gray-700">
+    <tr>
+        <th class="px-4 py-2 border cursor-pointer" data-column="code_number">Nomor Lambung <span class="sort-icon"></span></th>
+        <th class="px-4 py-2 border cursor-pointer" data-column="component">Component <span class="sort-icon"></span></th>
+        <th class="px-4 py-2 border cursor-pointer" data-column="deskripsi">Deskripsi <span class="sort-icon"></span></th>
+        <th class="px-4 py-2 border cursor-pointer" data-column="tanggal_temuan">Tanggal <span class="sort-icon"></span></th>
+        <th class="px-4 py-2 border cursor-pointer" data-column="condition">Condition <span class="sort-icon"></span></th>
+        <th class="px-4 py-2 border cursor-pointer" data-column="status">Status <span class="sort-icon"></span></th>
+        <th class="px-4 py-2 border text-center">Aksi</th>
+    </tr>
+</thead>
 
-                                                    <form action="{{ route('tindakan.destroy', $item->id) }}" method="POST"
-                                                        onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="inline-flex items-center justify-center px-2 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-md hover:bg-red-200 cursor-pointer">
-                                                            🗑️ Hapus
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6" class="text-center py-4 text-gray-500">Tidak ada data backlog</td>
-                                        </tr>
-                                    @endforelse
- 
-                                </tbody>
-                            </table>
-                        </div>
+            <tbody id="tableBody" class="divide-y divide-gray-200 text-gray-800">
+                <!-- rows will be injected here -->
+            </tbody>
+        </table>
+    </div>
 
-                        <div class="mt-4 flex justify-between text-sm text-gray-600">
-                            <span>Showing {{ $backlogs->firstItem() ?? 0 }} to {{ $backlogs->lastItem() ?? 0 }} of
-                                {{ $backlogs->total() ?? 0 }} entries</span>
-                            <div>
-                                {{ $backlogs->links() }}
-                            </div>
-                        </div>
-                    </div>
+    <!-- Pagination -->
+    <div class="mt-4 flex justify-between text-sm text-gray-600">
+        <span id="tableInfo"></span>
+        <div class="space-x-2">
+            <button id="prevPage" class="px-2 py-1 border rounded disabled:opacity-50">Prev</button>
+            <button id="nextPage" class="px-2 py-1 border rounded disabled:opacity-50">Next</button>
+        </div>
+    </div>
+</div>
+
+
 
                 </div>
 
@@ -346,6 +307,145 @@
 
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = @json($backlogs);
+
+        let currentPage = 1;
+        let perPage = 10;
+        let searchQuery = "";
+        let sortColumn = null;
+        let sortAsc = true;
+
+        const tableBody = document.getElementById("tableBody");
+        const searchInput = document.getElementById("searchInput");
+        const perPageSelect = document.getElementById("perPage");
+        const tableInfo = document.getElementById("tableInfo");
+        const prevBtn = document.getElementById("prevPage");
+        const nextBtn = document.getElementById("nextPage");
+
+        function updateSortIcons() {
+            document.querySelectorAll("th[data-column]").forEach(th => {
+                const col = th.getAttribute("data-column");
+                const icon = th.querySelector(".sort-icon");
+                icon.textContent = "";
+                if (col === sortColumn) {
+                    icon.textContent = sortAsc ? "▲" : "▼";
+                }
+            });
+        }
+
+        function renderTable() {
+            let filtered = rows.filter(row => {
+                return Object.values(row).some(val =>
+                    String(val).toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            });
+
+            if (sortColumn) {
+                filtered.sort((a, b) => {
+                    let x = a[sortColumn] ?? "";
+                    let y = b[sortColumn] ?? "";
+                    if (typeof x === "string") x = x.toLowerCase();
+                    if (typeof y === "string") y = y.toLowerCase();
+                    if (x < y) return sortAsc ? -1 : 1;
+                    if (x > y) return sortAsc ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            const total = filtered.length;
+            const start = (currentPage - 1) * perPage;
+            const end = Math.min(start + perPage, total);
+            const paginated = filtered.slice(start, end);
+
+            tableBody.innerHTML = "";
+            if (paginated.length === 0) {
+                tableBody.innerHTML = `
+                    <tr><td colspan="7" class="text-center py-4 text-gray-500">No backlog data</td></tr>
+                `;
+            } else {
+                paginated.forEach(item => {
+                    let conditionClass =
+                        item.condition === "Urgent" ? "text-red-800 bg-red-200" :
+                        item.condition === "Caution" ? "text-yellow-800 bg-yellow-200" :
+                        "text-green-800 bg-green-200";
+
+                    tableBody.innerHTML += `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 border">${item.code_number}</td>
+                            <td class="px-4 py-2 border">${item.component}</td>
+                            <td class="px-4 py-2 border">${item.deskripsi}</td>
+                            <td class="px-4 py-2 border">${item.tanggal_temuan}</td>
+                            <td class="px-4 py-2 border">
+                                <span class="inline-block px-2 py-1 text-xs font-semibold ${conditionClass} rounded-full">${item.condition}</span>
+                            </td>
+                            <td class="px-4 py-2 border">${item.status}</td>
+                            <td class="px-4 py-2 border text-center">
+                                <a href="/tindakan/${item.id}" class="inline-flex px-2 py-1 bg-green-200 text-black text-sm rounded hover:bg-yellow-200">✅ Tindak</a>
+                                <form action="/tindakan/${item.id}" method="POST" class="inline" onsubmit="return confirm('Delete this data?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="inline-flex px-2 py-1 bg-red-100 text-red-700 text-sm rounded hover:bg-red-200">🗑️ Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            tableInfo.textContent = `Showing ${start + 1} to ${end} of ${total} entries`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = end >= total;
+
+            // update icons
+            updateSortIcons();
+        }
+
+        // Events
+        searchInput.addEventListener("input", e => {
+            searchQuery = e.target.value;
+            currentPage = 1;
+            renderTable();
+        });
+
+        perPageSelect.addEventListener("change", e => {
+            perPage = parseInt(e.target.value);
+            currentPage = 1;
+            renderTable();
+        });
+
+        prevBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            currentPage++;
+            renderTable();
+        });
+
+        document.querySelectorAll("th[data-column]").forEach(th => {
+            th.addEventListener("click", () => {
+                const col = th.getAttribute("data-column");
+                if (sortColumn === col) {
+                    sortAsc = !sortAsc;
+                } else {
+                    sortColumn = col;
+                    sortAsc = true;
+                }
+                renderTable();
+            });
+        });
+
+        // initial render
+        renderTable();
+    });
+</script>
+
+
     <script>
         const backToTopBtn = document.getElementById('backToTop');
 

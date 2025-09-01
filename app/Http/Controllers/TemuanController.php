@@ -14,40 +14,51 @@ class TemuanController extends Controller
         return view('temuan', compact('temuan'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'tanggal_temuan' => 'required|date',
-            'code_number'    => 'required|string',
-            'component'      => 'required|string',
-            'status'         => 'required|string',
-            'deskripsi'      => 'nullable|string',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'tanggal_temuan' => 'required|date',
+        'code_number'    => 'required|string',
+        'component'      => 'required|string',
+        'status'         => 'required|string',
+        'deskripsi'      => 'nullable|string',
+        'evidence'       => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:2048', // add validation for photo
+    ]);
 
-        Backlog::create([
-            'tanggal_temuan' => $request->tanggal_temuan,
-            'id_inspeksi'    => $request->id_inspeksi,
-            'code_number'    => $request->code_number,
-            'hm'             => $request->hm,
-            'component'      => $request->component,
-            'plan_repair'    => $request->plan_repair,
-            'status'         => $request->status,
-            'condition'      => $request->condition,
-            'gl_pic'         => $request->gl_pic,
-            'pic_daily'      => $request->pic_daily,
-            'evidence'       => $request->evidence,
-            'deskripsi'      => $request->deskripsi,
-            'part_number'    => $request->part_number,
-            'part_name'      => $request->part_name,
-            'no_figure'      => $request->no_figure,
-            'qty'            => $request->qty,
-            'close_by'       => $request->close_by,
-            'id_action'      => $request->id_action,
-            'made_by'        => Auth::id(),
-        ]);
+    $evidencePath = null;
 
-        return redirect()->route('temuan')->with('success', 'Temuan berhasil ditambahkan.');
+    if ($request->hasFile('evidence')) {
+        $file = $request->file('evidence');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('uploads/evidence'), $filename);
+        $evidencePath = 'uploads/evidence/' . $filename; // store relative path
     }
+
+    Backlog::create([
+        'tanggal_temuan' => $request->tanggal_temuan,
+        'id_inspeksi'    => $request->id_inspeksi,
+        'code_number'    => $request->code_number,
+        'hm'             => $request->hm,
+        'component'      => $request->component,
+        'plan_repair'    => $request->plan_repair,
+        'status'         => $request->status,
+        'condition'      => $request->condition,
+        'gl_pic'         => $request->gl_pic,
+        'pic_daily'      => $request->pic_daily,
+        'evidence'       => $evidencePath,
+        'deskripsi'      => $request->deskripsi,
+        'part_number'    => $request->part_number,
+        'part_name'      => $request->part_name,
+        'no_figure'      => $request->no_figure,
+        'qty'            => $request->qty,
+        'close_by'       => $request->close_by,
+        'id_action'      => $request->id_action,
+        'made_by'        => Auth::id(),
+    ]);
+
+    return redirect()->route('temuan')->with('success', 'Temuan berhasil ditambahkan.');
+}
+
 
     public function update(Request $request, $id)
     {

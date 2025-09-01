@@ -242,9 +242,11 @@
                                             <td class="px-4 py-2 border whitespace-nowrap">{{ $user->name }}</td>
                                             <td class="px-4 py-2 border">
                                                 <span
-                                                    class="inline-block px-2 py-1 text-xs font-semibold text-black bg-blue-300 rounded-full">
-                                                    {{ $user->role }}
-                                                </span>
+    class="inline-block px-2 py-1 text-xs font-semibold text-black rounded-full
+        {{ $user->role === 'admin' ? 'bg-blue-300' : 'bg-green-300' }}">
+    {{ $user->role }}
+</span>
+
                                             </td>
                                             <td class="px-4 py-2 border text-center whitespace-nowrap">
                                                 <div class="flex items-center justify-center gap-2">

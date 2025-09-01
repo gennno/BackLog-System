@@ -240,33 +240,36 @@
                     <!-- Table Section -->
                     <div id="tabelTemuan" class="bg-white rounded-xl shadow p-6">
 
+                        <!-- Controls -->
                         <div class="flex justify-between items-center mb-4">
                             <div>
                                 <label class="text-sm text-gray-600">Show</label>
-                                <select class="border rounded px-2 py-1 text-sm">
-                                    <option>10</option>
-                                    <option selected>25</option>
-                                    <option>50</option>
+                                <select id="entriesPerPage" class="border rounded px-2 py-1 text-sm">
+                                    <option value="10">10</option>
+                                    <option value="25" selected>25</option>
+                                    <option value="50">50</option>
                                 </select>
                                 <span class="text-sm text-gray-600 ml-1">entries</span>
                             </div>
-                            <input type="text" placeholder="🔍 Search..."
+                            <input type="text" id="tableSearch" placeholder="🔍 Search..."
                                 class="border rounded px-3 py-1 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-blue-400">
                         </div>
+
+                        <!-- Table -->
                         <div class="overflow-x-auto">
-                            <table class="table-auto w-full text-sm text-left border border-gray-300">
+                            <table id="dataTable" class="table-auto w-full text-sm text-left border border-gray-300">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-700">
-                                        <th class="px-4 py-2 border whitespace-nowrap">Nomor Lambung</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Component</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Deskripsi</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Tanggal</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Condition</th>
-                                        <th class="px-4 py-2 border whitespace-nowrap">Status</th>
+                                        <th class="px-4 py-2 border whitespace-nowrap cursor-pointer">Nomor Lambung ⬍</th>
+                                        <th class="px-4 py-2 border whitespace-nowrap cursor-pointer">Component ⬍</th>
+                                        <th class="px-4 py-2 border cursor-pointer">Deskripsi ⬍</th>
+                                        <th class="px-4 py-2 border whitespace-nowrap cursor-pointer">Tanggal ⬍</th>
+                                        <th class="px-4 py-2 border whitespace-nowrap cursor-pointer">Condition ⬍</th>
+                                        <th class="px-4 py-2 border whitespace-nowrap cursor-pointer">Status ⬍</th>
                                         <th class="px-4 py-2 border text-center whitespace-nowrap">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-gray-800">
+                                <tbody id="tableBody" class="text-gray-800">
                                     @foreach($temuan as $item)
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-4 py-2 border whitespace-nowrap">{{ $item->code_number }}</td>
@@ -295,8 +298,6 @@
                                                         ✏️ Edit
                                                     </button>
 
-
-                                                    {{-- Delete form --}}
                                                     <form action="{{ route('temuan.destroy', $item->id) }}" method="POST"
                                                         onsubmit="return confirm('Yakin hapus temuan ini?')">
                                                         @csrf
@@ -310,82 +311,70 @@
                                             </td>
                                         </tr>
                                     @endforeach
-                                    <!-- Edit Temuan Modal -->
-                                    <div id="editModal"
-                                        class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-                                        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
-                                            <h3 class="text-lg font-semibold mb-4">Edit Temuan</h3>
-
-                                            <form id="editForm" method="POST" enctype="multipart/form-data">
-                                                @csrf
-                                                @method('PUT')
-
-                                                <div class="space-y-4">
-                                                    <div>
-                                                        <label class="block text-sm text-gray-600">Tanggal Temuan</label>
-                                                        <input type="date" name="tanggal_temuan" id="edit_tanggal_temuan"
-                                                            class="w-full border rounded-md p-2 mt-1" required>
-                                                    </div>
-
-                                                    <div>
-                                                        <label class="block text-sm text-gray-600">Nomor Lambung</label>
-                                                        <input type="text" name="code_number" id="edit_code_number"
-                                                            class="w-full border rounded-md p-2 mt-1" required>
-                                                    </div>
-
-                                                    <div>
-                                                        <label class="block text-sm text-gray-600">Component</label>
-                                                        <input type="text" name="component" id="edit_component"
-                                                            class="w-full border rounded-md p-2 mt-1" required>
-                                                    </div>
-
-                                                    <div>
-                                                        <label class="block text-sm text-gray-600">Status</label>
-                                                        <select name="status" id="edit_status"
-                                                            class="w-full border rounded-md p-2 mt-1" required>
-                                                            <option value="Open BL">Open BL</option>
-                                                            <option value="Close">Close</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div>
-                                                        <label class="block text-sm text-gray-600">Condition</label>
-                                                        <select name="condition" id="edit_condition"
-                                                            class="w-full border rounded-md p-2 mt-1">
-                                                            <option value="Caution">Caution</option>
-                                                            <option value="Urgent">Urgent</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div>
-                                                        <label class="block text-sm text-gray-600">Deskripsi</label>
-                                                        <textarea name="deskripsi" id="edit_deskripsi"
-                                                            class="w-full border rounded-md p-2 mt-1" rows="3"></textarea>
-                                                    </div>
-
-                                                    <div class="flex justify-end gap-2">
-                                                        <button type="button" onclick="closeEditModal()"
-                                                            class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Batal</button>
-                                                        <button type="submit"
-                                                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Simpan</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-
                                 </tbody>
-
                             </table>
-
                         </div>
+
+                        <!-- Pagination -->
                         <div class="mt-4 flex justify-between text-sm text-gray-600">
-                            <span>Showing 1 to 1 of 1 entries</span>
-                            <div class="space-x-2">
-                                <button class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</button>
-                                <button class="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">1</button>
-                                <button class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</button>
-                            </div>
+                            <span id="tableInfo">Showing 1 to X of Y entries</span>
+                            <div id="paginationControls" class="space-x-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Temuan Modal (keep only one, outside loop) -->
+                    <div id="editModal"
+                        class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+                            <h3 class="text-lg font-semibold mb-4">Edit Temuan</h3>
+                            <form id="editForm" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-600">Tanggal Temuan</label>
+                                        <input type="date" name="tanggal_temuan" id="edit_tanggal_temuan"
+                                            class="w-full border rounded-md p-2 mt-1" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-600">Nomor Lambung</label>
+                                        <input type="text" name="code_number" id="edit_code_number"
+                                            class="w-full border rounded-md p-2 mt-1" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-600">Component</label>
+                                        <input type="text" name="component" id="edit_component"
+                                            class="w-full border rounded-md p-2 mt-1" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-600">Status</label>
+                                        <select name="status" id="edit_status" class="w-full border rounded-md p-2 mt-1"
+                                            required>
+                                            <option value="Open BL">Open BL</option>
+                                            <option value="Close">Close</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-600">Condition</label>
+                                        <select name="condition" id="edit_condition"
+                                            class="w-full border rounded-md p-2 mt-1">
+                                            <option value="Caution">Caution</option>
+                                            <option value="Urgent">Urgent</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-600">Deskripsi</label>
+                                        <textarea name="deskripsi" id="edit_deskripsi"
+                                            class="w-full border rounded-md p-2 mt-1" rows="3"></textarea>
+                                    </div>
+                                    <div class="flex justify-end gap-2">
+                                        <button type="button" onclick="closeEditModal()"
+                                            class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Batal</button>
+                                        <button type="submit"
+                                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Simpan</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
@@ -505,6 +494,117 @@
             document.getElementById('editModal').classList.remove('flex');
         }
     </script>
+    <!-- Table Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tableBody = document.getElementById("tableBody");
+            const searchInput = document.getElementById("tableSearch");
+            const entriesSelect = document.getElementById("entriesPerPage");
+            const tableInfo = document.getElementById("tableInfo");
+            const paginationControls = document.getElementById("paginationControls");
+            const headers = document.querySelectorAll("thead th");
 
+            let rows = Array.from(tableBody.querySelectorAll("tr"));
+            let currentPage = 1;
+            let entriesPerPage = parseInt(entriesSelect.value);
+            let sortColumn = null;
+            let sortAsc = true;
+
+            function renderTable() {
+                const search = searchInput.value.toLowerCase();
+                let filtered = rows.filter(row =>
+                    row.innerText.toLowerCase().includes(search)
+                );
+
+                if (sortColumn !== null) {
+                    filtered.sort((a, b) => {
+                        const aText = a.cells[sortColumn].innerText.trim();
+                        const bText = b.cells[sortColumn].innerText.trim();
+                        return sortAsc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                    });
+                }
+
+                const total = filtered.length;
+                const totalPages = Math.ceil(total / entriesPerPage);
+                currentPage = Math.min(currentPage, totalPages) || 1;
+
+                const start = (currentPage - 1) * entriesPerPage;
+                const end = start + entriesPerPage;
+                const paginated = filtered.slice(start, end);
+
+                tableBody.innerHTML = "";
+                paginated.forEach(r => tableBody.appendChild(r));
+
+                tableInfo.textContent = `Showing ${start + 1} to ${Math.min(end, total)} of ${total} entries`;
+
+                paginationControls.innerHTML = "";
+                if (totalPages > 1) {
+                    if (currentPage > 1) {
+                        const prevBtn = document.createElement("button");
+                        prevBtn.textContent = "Prev";
+                        prevBtn.className = "px-2 py-1 bg-gray-200 rounded hover:bg-gray-300";
+                        prevBtn.onclick = () => { currentPage--; renderTable(); };
+                        paginationControls.appendChild(prevBtn);
+                    }
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        const btn = document.createElement("button");
+                        btn.textContent = i;
+                        btn.className = `px-2 py-1 rounded ${i === currentPage ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"}`;
+                        btn.onclick = () => { currentPage = i; renderTable(); };
+                        paginationControls.appendChild(btn);
+                    }
+
+                    if (currentPage < totalPages) {
+                        const nextBtn = document.createElement("button");
+                        nextBtn.textContent = "Next";
+                        nextBtn.className = "px-2 py-1 bg-gray-200 rounded hover:bg-gray-300";
+                        nextBtn.onclick = () => { currentPage++; renderTable(); };
+                        paginationControls.appendChild(nextBtn);
+                    }
+                }
+            }
+
+            searchInput.addEventListener("input", () => { currentPage = 1; renderTable(); });
+            entriesSelect.addEventListener("change", () => { entriesPerPage = parseInt(entriesSelect.value); currentPage = 1; renderTable(); });
+
+            headers.forEach((header, index) => {
+                if (index < headers.length - 1) { // skip "Aksi" column
+                    header.addEventListener("click", () => {
+                        if (sortColumn === index) {
+                            sortAsc = !sortAsc;
+                        } else {
+                            sortColumn = index;
+                            sortAsc = true;
+                        }
+                        renderTable();
+                    });
+                }
+            });
+
+            renderTable();
+        });
+
+        // Modal functions
+        function editTemuan(id, tanggal, code, component, status, condition, deskripsi) {
+            document.getElementById("edit_tanggal_temuan").value = tanggal;
+            document.getElementById("edit_code_number").value = code;
+            document.getElementById("edit_component").value = component;
+            document.getElementById("edit_status").value = status;
+            document.getElementById("edit_condition").value = condition;
+            document.getElementById("edit_deskripsi").value = deskripsi;
+
+            const form = document.getElementById("editForm");
+            form.action = `/temuan/${id}`;
+
+            document.getElementById("editModal").classList.remove("hidden");
+            document.getElementById("editModal").classList.add("flex");
+        }
+
+        function closeEditModal() {
+            document.getElementById("editModal").classList.remove("flex");
+            document.getElementById("editModal").classList.add("hidden");
+        }
+    </script>
 
 @endsection

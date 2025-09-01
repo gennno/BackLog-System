@@ -209,11 +209,43 @@
                             <div class="col-span-1 sm:col-span-2">
                                 <label class="text-gray-500 text-sm mb-1">Evidence</label>
                                 @if ($backlog->evidence)
-                                    <img src="{{ asset('storage/' . $backlog->evidence) }}" alt="Foto Evidence"
+                                    <img src="{{ asset($backlog->evidence) }}" alt="Foto Evidence"
                                         class="rounded-md border shadow max-w-xs">
                                 @else
                                     <p class="text-gray-500 text-sm">Tidak ada evidence</p>
                                 @endif
+                            </div>
+
+                            <!-- Tambahan field yang belum ada -->
+                            <div class="border-b pb-2">
+                                <label class="text-gray-500 text-sm">Part Number</label>
+                                <input type="text" name="part_number" value="{{ $backlog->part_number }}"
+                                    class="w-full font-semibold text-gray-800 border rounded px-3 py-1" />
+                            </div>
+                            <div class="border-b pb-2">
+                                <label class="text-gray-500 text-sm">Part Name</label>
+                                <input type="text" name="part_name" value="{{ $backlog->part_name }}"
+                                    class="w-full font-semibold text-gray-800 border rounded px-3 py-1" />
+                            </div>
+                            <div class="border-b pb-2">
+                                <label class="text-gray-500 text-sm">No. Figure</label>
+                                <input type="text" name="no_figure" value="{{ $backlog->no_figure }}"
+                                    class="w-full font-semibold text-gray-800 border rounded px-3 py-1" />
+                            </div>
+                            <div class="border-b pb-2">
+                                <label class="text-gray-500 text-sm">Qty</label>
+                                <input type="number" name="qty" value="{{ $backlog->qty }}"
+                                    class="w-full font-semibold text-gray-800 border rounded px-3 py-1" />
+                            </div>
+                            <div class="border-b pb-2">
+                                <label class="text-gray-500 text-sm">Close By</label>
+                                <input type="text" name="close_by" value="{{ $backlog->close_by }}"
+                                    class="w-full font-semibold text-gray-800 border rounded px-3 py-1" />
+                            </div>
+                            <div class="border-b pb-2">
+                                <label class="text-gray-500 text-sm">ID Action</label>
+                                <input type="text" name="id_action" value="{{ $backlog->id_action }}"
+                                    class="w-full font-semibold text-gray-800 border rounded px-3 py-1" />
                             </div>
                         </div>
 
@@ -225,6 +257,7 @@
                                 class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
                         </div>
                     </form>
+
                 </div>
 
             </main>

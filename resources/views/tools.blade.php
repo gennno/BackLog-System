@@ -283,8 +283,8 @@
 
                                                 <!-- Code Tools -->
                                                 <div class="mb-4">
-                                                    <label class="block text-sm text-gray-600">Code Tools</label>
-                                                    <input type="text" name="kode_tool" id="edit_kode_tool"
+                                                    <label class="block text-sm text-gray-600">Lokasi</label>
+                                                    <input type="text" name="lokasi" id="edit_lokasi"
                                                         class="w-full border rounded-md p-2 mt-1" required>
                                                 </div>
 
@@ -432,43 +432,44 @@
         });
 
     </script>
-    <script>
-        function openEditModal(toolId) {
-            fetch(`/tools/${toolId}/edit`)
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById('editToolForm').action = `/tools/${toolId}`;
-                    document.getElementById('edit_tool_id').value = toolId;
-                    document.getElementById('edit_kode_tool').value = data.kode_tool;
-                    document.getElementById('edit_nama_tool').value = data.nama_tool;
-                    document.getElementById('edit_status').value = data.status;
-                    document.getElementById('edit_deskripsi').value = data.deskripsi;
+<script>
+    function openEditModal(toolId) {
+        fetch(`/tools/${toolId}/edit`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('editToolForm').action = `/tools/${toolId}`;
+                document.getElementById('edit_tool_id').value = toolId;
+                document.getElementById('edit_lokasi').value = data.lokasi;
+                document.getElementById('edit_nama_tool').value = data.nama_tool;
+                document.getElementById('edit_status').value = data.status;
+                document.getElementById('edit_deskripsi').value = data.deskripsi;
 
-                    const preview = document.getElementById('edit_previewFoto');
-                    if (data.foto) {
-                        preview.src = `/storage/${data.foto}`;
-                        preview.classList.remove('hidden');
-                    } else {
-                        preview.classList.add('hidden');
-                    }
+                const preview = document.getElementById('edit_previewFoto');
+                if (data.foto) {
+                    preview.src = `/${data.foto}`; // ✅ direct from public folder
+                    preview.classList.remove('hidden');
+                } else {
+                    preview.classList.add('hidden');
+                }
 
-                    document.getElementById('editToolModal').classList.remove('hidden');
-                });
+                document.getElementById('editToolModal').classList.remove('hidden');
+            });
+    }
+
+    function closeEditModal() {
+        document.getElementById('editToolModal').classList.add('hidden');
+    }
+
+    document.getElementById('edit_foto').addEventListener('change', function (e) {
+        const preview = document.getElementById('edit_previewFoto');
+        const file = e.target.files[0];
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.classList.remove('hidden');
         }
+    });
+</script>
 
-        function closeEditModal() {
-            document.getElementById('editToolModal').classList.add('hidden');
-        }
-
-        document.getElementById('edit_foto').addEventListener('change', function (e) {
-            const preview = document.getElementById('edit_previewFoto');
-            const file = e.target.files[0];
-            if (file) {
-                preview.src = URL.createObjectURL(file);
-                preview.classList.remove('hidden');
-            }
-        });
-    </script>
 
 
 @endsection

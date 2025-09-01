@@ -12,25 +12,8 @@ class TindakanController extends Controller
 {
 public function index()
 {
-    $backlogs = Backlog::orderByRaw("
-        CASE 
-            WHEN status = 'Open BL' THEN 0
-            ELSE 1
-        END
-    ")
-    ->orderByRaw("
-        CASE 
-            WHEN status = 'Open BL' THEN created_at
-            ELSE NULL
-        END ASC
-    ")
-    ->orderByRaw("
-        CASE 
-            WHEN status != 'Open BL' THEN created_at
-            ELSE NULL
-        END DESC
-    ")
-    ->paginate(25);
+    // ambil semua data langsung, urutkan tanggal terbaru dulu
+    $backlogs = Backlog::orderBy('tanggal_temuan', 'desc')->get();
 
     return view('tindakan', compact('backlogs'));
 }
@@ -48,11 +31,10 @@ public function index()
         return view('detail-tindakan', compact('backlog'));
     }
 
-    public function update(Request $request, $id)
+public function update(Request $request, $id)
 {
     $backlog = Backlog::findOrFail($id);
 
-    // Validate only the fields you want to update
     $validated = $request->validate([
         'id_inspeksi' => 'required|string|max:255',
         'code_number' => 'nullable|string|max:255',
@@ -64,20 +46,31 @@ public function index()
         'gl_pic' => 'nullable|string|max:255',
         'pic_daily' => 'nullable|string|max:255',
         'deskripsi' => 'nullable|string',
-        'evidence' => 'nullable|image|max:2048', // optional image
+        'evidence' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:2048',
+
+        // ✅ newly added fields
+        'part_number' => 'nullable|string|max:255',
+        'part_name'   => 'nullable|string|max:255',
+        'no_figure'   => 'nullable|string|max:255',
+        'qty'         => 'nullable|integer|min:1',
+        'close_by'    => 'nullable|string|max:255',
+        'id_action'   => 'nullable|string|max:255',
     ]);
 
-    // Handle evidence upload
+    // Handle new evidence upload
     if ($request->hasFile('evidence')) {
         // Delete old evidence if exists
-        if ($backlog->evidence && Storage::exists($backlog->evidence)) {
-            Storage::delete($backlog->evidence);
+        if ($backlog->evidence && file_exists(public_path($backlog->evidence))) {
+            unlink(public_path($backlog->evidence));
         }
-        $path = $request->file('evidence')->store('evidence', 'public');
-        $validated['evidence'] = $path;
+
+        $file = $request->file('evidence');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('uploads/evidence'), $filename);
+
+        $validated['evidence'] = 'uploads/evidence/' . $filename;
     }
 
-    // Update backlog (excluding tanggal/created_at)
     $backlog->update($validated);
 
     return redirect()->route('detail-tindakan', $backlog->id)
@@ -85,10 +78,12 @@ public function index()
 }
 
 
+
+
     public function store(Request $request)
     {
         $request->validate([
-            'id'        => 'required|exists:backlog,id',
+            'id'        => 'required|exists:backlog,id',    
             'status'    => 'required|string',
             'deskripsi' => 'nullable|string',
         ]);
