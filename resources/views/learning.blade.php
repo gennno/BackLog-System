@@ -157,6 +157,26 @@
                         </div>
                     </a>
 
+                    <a href="https://drive.google.com/file/d/18pXYV-hI-j_sN9Dtxj8Y--e3osF0SkXc/view"
+                        target="_blank"
+                        class="block bg-white rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden border border-gray-200">
+                        <img src="/img/heem.jpeg" alt="Motor Grader Group" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-800">Heavy Equipment Electrical Maintenance</h3>
+                            <p class="text-sm text-gray-600 mt-1">Panduan teknis dan perawatan elektrikal alat berat.</p>
+                        </div>
+                    </a>
+
+                    <a href="https://drive.google.com/file/d/1nbLoD-I1s7qk44quopAtCiwi48hXh0bv/view"
+                        target="_blank"
+                        class="block bg-white rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden border border-gray-200">
+                        <img src="/img/kawashima.png" alt="Motor Grader Group" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-800">Kawashima Project</h3>
+                            <p class="text-sm text-gray-600 mt-1">Panduan Kawashima Project.</p>
+                        </div>
+                    </a>
+
                     <!-- Tambahkan card lainnya jika perlu -->
 
                 </div>
